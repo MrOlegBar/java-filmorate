@@ -2,12 +2,11 @@ package ru.yandex.practicum.filmorate.model;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
-import java.util.Date;
 
 @lombok.Data
 public class User {
-    @Digits(integer = 2_147_483_647, fraction = 0) @NotNull
-    private final int id;
+    @Digits(integer = 2_147_483_647, fraction = 0) @Positive @NotNull
+    private int id;
     @Email @NotNull
     private final String email;
     @NotBlank

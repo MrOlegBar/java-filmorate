@@ -2,11 +2,10 @@ package ru.yandex.practicum.filmorate.model;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
-import java.util.Date;
 
 @lombok.Data
 public class Film {
-    @Digits(integer = 2_147_483_647, fraction = 0) @NotNull
+    @Digits(integer = 2_147_483_647, fraction = 0) @Positive @NotNull
     private final int id;
     @NotBlank
     private final String name;
@@ -14,6 +13,6 @@ public class Film {
     private final String description;
     @NotNull
     private final LocalDate releaseDate;
-    @Digits(integer = 2_147_483_647, fraction = 0) @NotNull @Positive
+    @Digits(integer = 2_147_483_647, fraction = 0) @Positive @NotNull
     private final long duration;
 }
