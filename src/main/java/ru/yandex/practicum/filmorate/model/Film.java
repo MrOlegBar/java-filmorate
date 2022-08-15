@@ -6,13 +6,20 @@ import java.time.LocalDate;
 @lombok.Data
 public class Film {
     @Digits(integer = 2_147_483_647, fraction = 0) @Positive @NotNull
-    private final int id;
+    private int id = 1;
     @NotBlank
-    private final String name;
+    private String name;
     @Size(max = 200) @NotNull
-    private final String description;
+    private String description;
     @NotNull
-    private final LocalDate releaseDate;
+    private LocalDate releaseDate;
     @Digits(integer = 2_147_483_647, fraction = 0) @Positive @NotNull
-    private final long duration;
+    private long duration;
+
+    public Film(String name, String description, LocalDate releaseDate, long duration) {
+        this.name = name;
+        this.description = description;
+        this.releaseDate = releaseDate;
+        this.duration = duration;
+    }
 }
