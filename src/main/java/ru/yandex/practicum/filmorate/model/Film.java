@@ -10,7 +10,7 @@ public class Film {
     private final int id;
     @NotBlank
     private String name;
-    @Size(max = 200) @NotNull
+    @Size(max = 200)
     private String description;
     @NotNull
     private LocalDate releaseDate;
