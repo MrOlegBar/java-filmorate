@@ -1,15 +1,15 @@
 package ru.yandex.practicum.filmorate.model;
 
+import ru.yandex.practicum.filmorate.controller.UserController;
+
 import javax.validation.constraints.*;
 import java.time.LocalDate;
 
 @lombok.Data
 public class User {
-    @Digits(integer = 2_147_483_647, fraction = 0) @Positive @NotNull
-    private int id = 1;
-    @NotBlank
+    private final int id;
+    @Pattern(regexp = "\\S*") @NotNull
     private String login;
-    @NotNull
     private String name;
     @Email @NotNull
     private String email;
@@ -17,6 +17,7 @@ public class User {
     private LocalDate birthday;
 
     User(String login, String name, String email, LocalDate birthday) {
+        this.id = new UserController().getIdGeneration();
         this.login = login;
         this.name = name;
         this.email = email;
