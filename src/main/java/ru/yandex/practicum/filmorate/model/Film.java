@@ -1,13 +1,17 @@
 package ru.yandex.practicum.filmorate.model;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import ru.yandex.practicum.filmorate.controller.FilmController;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
 
 @lombok.Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Film {
-    private final int id;
+    private int id;
     @NotBlank
     private String name;
     @Size(max = 200)
