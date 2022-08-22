@@ -124,7 +124,8 @@ class FilmControllerTests {
                 ,"Film Updated"
                 , "New film update description"
                 , LocalDate.parse("1989-04-17")
-                , 190);
+                , 190
+                , null);
 
         HttpEntity<Film> httpEntity = new HttpEntity<>(updatedFilm);
 
@@ -155,7 +156,8 @@ class FilmControllerTests {
                 ,"Film Updated"
                 , "New film update description"
                 , LocalDate.parse("1989-04-17")
-                , 190);
+                , 190
+                , null);
 
         HttpEntity<Film> httpEntity = new HttpEntity<>(updatedFilm);
 

@@ -3,10 +3,10 @@ package ru.yandex.practicum.filmorate.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.yandex.practicum.filmorate.controller.UserController;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -17,12 +17,22 @@ public class User {
     private String name;
     @NotNull @Email private String email;
     @NotNull @PastOrPresent private LocalDate birthday;
+    private Set<Long> friends;
 
     public User(String login, String name, String email, LocalDate birthday) {
-        this.id = new UserController().getIdGeneration();
+        //this.id = new UserController().getIdGeneration();
         this.login = login;
         this.name = name;
         this.email = email;
         this.birthday = birthday;
+    }
+
+    public User(String login, String name, String email, LocalDate birthday, Set<Long> friends) {
+        //this.id = new UserController().getIdGeneration();
+        this.login = login;
+        this.name = name;
+        this.email = email;
+        this.birthday = birthday;
+        this.friends = friends;
     }
 }

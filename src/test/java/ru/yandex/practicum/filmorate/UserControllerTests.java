@@ -106,7 +106,8 @@ class UserControllerTests {
                 ,"Login"
                 , "Nick Name"
                 , "mail@mail.ru"
-                , LocalDate.parse("1946-08-20"));
+                , LocalDate.parse("1946-08-20")
+                , null);
 
         HttpEntity<User> httpEntity = new HttpEntity<>(updatedUser);
 
@@ -138,7 +139,8 @@ class UserControllerTests {
                 ,"Login"
                 , "Nick Name"
                 , "mail@mail.ru"
-                , LocalDate.parse("1946-08-20"));
+                , LocalDate.parse("1946-08-20")
+                , null);
 
         HttpEntity<User> httpEntity = new HttpEntity<>(updatedUser);
 
