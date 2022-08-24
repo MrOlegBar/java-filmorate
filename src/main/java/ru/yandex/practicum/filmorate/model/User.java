@@ -19,16 +19,7 @@ public class User {
     @NotNull @PastOrPresent private LocalDate birthday;
     private Set<Long> friends;
 
-    public User(String login, String name, String email, LocalDate birthday) {
-        //this.id = new UserController().getIdGeneration();
-        this.login = login;
-        this.name = name;
-        this.email = email;
-        this.birthday = birthday;
-    }
-
     public User(String login, String name, String email, LocalDate birthday, Set<Long> friends) {
-        //this.id = new UserController().getIdGeneration();
         this.login = login;
         this.name = name;
         this.email = email;

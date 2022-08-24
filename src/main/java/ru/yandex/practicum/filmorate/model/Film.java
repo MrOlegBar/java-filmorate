@@ -2,11 +2,14 @@ package ru.yandex.practicum.filmorate.model;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import ru.yandex.practicum.filmorate.controller.FilmController;
+import org.springframework.beans.factory.annotation.Autowired;
+import ru.yandex.practicum.filmorate.comparator.LikesFilmComparator;
+import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
 import java.util.Set;
+import java.util.TreeSet;
 
 @lombok.Data
 @NoArgsConstructor
@@ -21,15 +24,21 @@ public class Film {
     private LocalDate releaseDate;
     @Digits(integer = 2_147_483_647, fraction = 0) @Positive @NotNull
     private long duration;
-    private Set<Long> likes;
+    LikesFilmComparator likesFilmComparator;
+    @Autowired
+    FilmStorage filmStorage;
 
-    public Film(String name, String description, LocalDate releaseDate, long duration) {
-        //this.id = new FilmController().getIdGeneration();
-        this.name = name;
-        this.description = description;
-        this.releaseDate = releaseDate;
-        this.duration = duration;
-    }
+    private Set<Long> likes = new TreeSet<>(likesFilmComparator);
+
+    private final Set<Long> likes2 = new TreeSet<>((userId1, userId2) -> {
+        long id1 = userId1;
+        long id2 = userId2;
+
+        Film film1 = filmStorage.getFilmById((int) id1);
+        Film film2 = filmStorage.getFilmById((int) id2);
+
+        return Integer.compare(film1.getLikes().size(), film2.getLikes().size());
+    });
 
     public Film(String name, String description, LocalDate releaseDate, long duration, Set<Long> likes) {
         this.name = name;

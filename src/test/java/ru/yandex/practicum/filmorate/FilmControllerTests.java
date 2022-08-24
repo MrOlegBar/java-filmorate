@@ -20,7 +20,8 @@ class FilmControllerTests {
     Film film = new Film("name"
             , "description"
             , LocalDate.parse("1967-03-25")
-            , 100);
+            , 100
+            , null);
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -53,7 +54,8 @@ class FilmControllerTests {
         Film film = new Film(""
                 , "Description"
                 , LocalDate.parse("1900-03-25")
-                , 200);
+                , 200
+                , null);
 
         ResponseEntity<String> response = this.restTemplate.postForEntity(URI_FILMS
                 , film
@@ -71,7 +73,8 @@ class FilmControllerTests {
                 " разыскать господина Огюста Куглова, который задолжал им деньги, а именно 20 миллионов. о Куглов," +
                 " который за время «своего отсутствия», стал кандидатом Коломбани."
                 , LocalDate.parse("1900-03-25")
-                , 200);
+                , 200
+                , null);
 
         ResponseEntity<String> response = this.restTemplate.postForEntity(URI_FILMS
                 , film
@@ -87,7 +90,8 @@ class FilmControllerTests {
         Film film = new Film("Name"
                 , "Description"
                 , LocalDate.parse("1890-03-25")
-                , 200);
+                , 200
+                , null);
 
         ResponseEntity<String> response = this.restTemplate.postForEntity(URI_FILMS
                 , film
@@ -103,7 +107,8 @@ class FilmControllerTests {
         Film film = new Film("Name"
                 , "Description"
                 , LocalDate.parse("1900-03-25")
-                , -200);
+                , -200
+                , null);
 
         ResponseEntity<String> response = this.restTemplate.postForEntity(URI_FILMS
                 , film
