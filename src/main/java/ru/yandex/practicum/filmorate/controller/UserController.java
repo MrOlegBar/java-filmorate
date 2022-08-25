@@ -1,11 +1,8 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
@@ -37,8 +34,13 @@ public class UserController {
     }
 
     @PutMapping("/users")
-    public User update(@RequestBody @Valid User user) throws ValidationException {
+    public User update(@RequestBody @Valid User user) throws UserNotFoundException {
         return userStorage.update(user);
+    }
+
+    @GetMapping("/users/{userId}")
+    public User getUserById(@PathVariable("userId") int userId) {
+        return userStorage.getUserById(userId);
     }
 
     @PutMapping("/users/{userId}/friends/{friendId}")
@@ -62,21 +64,5 @@ public class UserController {
     public List<User> getCorporateFriends(@PathVariable("userId") int userId
             , @PathVariable("otherUserId") int otherUserId) throws UserNotFoundException {
         return userService.getCorporateFriends(userId, otherUserId);
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<Map<String, String>> handleValidation(final ValidationException e) {
-        return new ResponseEntity<Map<String, String>>(
-                Map.of("error message", e.getMessage()),
-                HttpStatus.BAD_REQUEST
-        );
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<Map<String, String>> handleUserNotFound(final UserNotFoundException e) {
-        return new ResponseEntity<>(
-                Map.of("error message", e.getMessage()),
-                HttpStatus.NOT_FOUND
-        );
     }
 }

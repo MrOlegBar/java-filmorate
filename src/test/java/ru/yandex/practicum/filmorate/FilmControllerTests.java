@@ -20,7 +20,7 @@ class FilmControllerTests {
     Film film = new Film("name"
             , "description"
             , LocalDate.parse("1967-03-25")
-            , 100
+            , 100L
             , null);
 
     @Autowired
@@ -54,7 +54,7 @@ class FilmControllerTests {
         Film film = new Film(""
                 , "Description"
                 , LocalDate.parse("1900-03-25")
-                , 200
+                , 200L
                 , null);
 
         ResponseEntity<String> response = this.restTemplate.postForEntity(URI_FILMS
@@ -73,7 +73,7 @@ class FilmControllerTests {
                 " разыскать господина Огюста Куглова, который задолжал им деньги, а именно 20 миллионов. о Куглов," +
                 " который за время «своего отсутствия», стал кандидатом Коломбани."
                 , LocalDate.parse("1900-03-25")
-                , 200
+                , 200L
                 , null);
 
         ResponseEntity<String> response = this.restTemplate.postForEntity(URI_FILMS
@@ -90,7 +90,7 @@ class FilmControllerTests {
         Film film = new Film("Name"
                 , "Description"
                 , LocalDate.parse("1890-03-25")
-                , 200
+                , 200L
                 , null);
 
         ResponseEntity<String> response = this.restTemplate.postForEntity(URI_FILMS
@@ -107,7 +107,7 @@ class FilmControllerTests {
         Film film = new Film("Name"
                 , "Description"
                 , LocalDate.parse("1900-03-25")
-                , -200
+                , -200L
                 , null);
 
         ResponseEntity<String> response = this.restTemplate.postForEntity(URI_FILMS
@@ -129,7 +129,7 @@ class FilmControllerTests {
                 ,"Film Updated"
                 , "New film update description"
                 , LocalDate.parse("1989-04-17")
-                , 190
+                , 190L
                 , null);
 
         HttpEntity<Film> httpEntity = new HttpEntity<>(updatedFilm);
@@ -161,7 +161,7 @@ class FilmControllerTests {
                 ,"Film Updated"
                 , "New film update description"
                 , LocalDate.parse("1989-04-17")
-                , 190
+                , 190L
                 , null);
 
         HttpEntity<Film> httpEntity = new HttpEntity<>(updatedFilm);

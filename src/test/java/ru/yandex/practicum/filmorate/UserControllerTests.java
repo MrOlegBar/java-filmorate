@@ -20,7 +20,8 @@ class UserControllerTests {
     User user = new User("Login"
             , ""
             , "mail@mail.ru"
-            , LocalDate.parse("1946-08-20"));
+            , LocalDate.parse("1946-08-20")
+            , null);
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -52,7 +53,8 @@ class UserControllerTests {
         User user = new User("Login"
                 , "Name"
                 , "mail.ru"
-                , LocalDate.parse("1980-08-20"));
+                , LocalDate.parse("1980-08-20")
+                , null);
 
         ResponseEntity<String> response = this.restTemplate.postForEntity(URI_USERS
                 , user
@@ -68,7 +70,8 @@ class UserControllerTests {
         User user = new User("Login Fail"
                 , "Name"
                 , "mail@mail.ru"
-                , LocalDate.parse("1980-08-20"));
+                , LocalDate.parse("1980-08-20")
+                , null);
 
         ResponseEntity<String> response = this.restTemplate.postForEntity(URI_USERS
                 , user
@@ -85,7 +88,8 @@ class UserControllerTests {
                 "Login"
                 , "Name"
                 , "mail@mail.ru"
-                , LocalDate.parse("2446-08-20"));
+                , LocalDate.parse("2446-08-20")
+                , null);
 
         ResponseEntity<String> response = this.restTemplate.postForEntity(URI_USERS
                 , user

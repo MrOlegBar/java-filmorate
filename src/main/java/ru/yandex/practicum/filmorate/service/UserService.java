@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+@Slf4j
 @Service
 public class UserService {
     private final UserStorage userStorage;
@@ -30,10 +32,16 @@ public class UserService {
                 friendsFriend.add((long) userId);
                 return user;
             } else {
-                throw new UserNotFoundException(String.format("Пользователь с id = %s не найден", friendId));
+                UserNotFoundException e = new UserNotFoundException(String.format("Пользователь с id = %s не найден"
+                        , friendId));
+                log.debug("Валидация не пройдена", e);
+                throw e;
             }
         } else {
-            throw new UserNotFoundException(String.format("Пользователь с id = %s не найден", userId));
+            UserNotFoundException e = new UserNotFoundException(String.format("Пользователь с id = %s не найден"
+                    , userId));
+            log.debug("Валидация не пройдена", e);
+            throw e;
         }
     }
 
@@ -48,10 +56,16 @@ public class UserService {
                 friendsFriend.remove((long) userId);
                 return user;
             } else {
-                throw new UserNotFoundException(String.format("Пользователь с id = %s не найден", friendId));
+                UserNotFoundException e = new UserNotFoundException(String.format("Пользователь с id = %s не найден"
+                        , friendId));
+                log.debug("Валидация не пройдена", e);
+                throw e;
             }
         } else {
-            throw new UserNotFoundException(String.format("Пользователь с id = %s не найден", userId));
+            UserNotFoundException e = new UserNotFoundException(String.format("Пользователь с id = %s не найден"
+                    , userId));
+            log.debug("Валидация не пройдена", e);
+            throw e;
         }
     }
 
@@ -66,7 +80,10 @@ public class UserService {
                 }
                 return friends;
         } else {
-            throw new UserNotFoundException(String.format("Пользователь с id = %s не найден", userId));
+            UserNotFoundException e = new UserNotFoundException(String.format("Пользователь с id = %s не найден"
+                    , userId));
+            log.debug("Валидация не пройдена", e);
+            throw e;
         }
     }
 
@@ -86,10 +103,16 @@ public class UserService {
                 }
                 return corporateFriends;
             } else {
-                throw new UserNotFoundException(String.format("Пользователь с id = %s не найден", otherUserId));
+                UserNotFoundException e = new UserNotFoundException(String.format("Пользователь с id = %s не найден"
+                        , otherUserId));
+                log.debug("Валидация не пройдена", e);
+                throw e;
             }
         } else {
-            throw new UserNotFoundException(String.format("Пользователь с id = %s не найден", userId));
+            UserNotFoundException e = new UserNotFoundException(String.format("Пользователь с id = %s не найден"
+                    , userId));
+            log.debug("Валидация не пройдена", e);
+            throw e;
         }
     }
 }

@@ -55,7 +55,7 @@ public class FilmService {
         }
     }
 
-    public List<Film> getPopularFilms(int countFilms) {
+    public List<Film> getPopularFilms(Integer countFilms) {
         Collection<Film> films = filmStorage.findAll();
         return films.stream()
                 .sorted(this::compare)
@@ -64,6 +64,6 @@ public class FilmService {
     }
 
     private int compare(Film f0, Film f1) {
-        return Integer.compare(f0.getLikes().size(), f1.getLikes().size());
+        return -1 * Integer.compare(f0.getLikes().size(), f1.getLikes().size());
     }
 }

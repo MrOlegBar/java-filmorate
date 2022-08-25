@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.storage;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
@@ -15,9 +16,10 @@ import java.util.TreeMap;
 public class InMemoryFilmStorage implements FilmStorage {
     private final Map<Integer, Film> films = new TreeMap<>();
     private final LocalDate dateCheck = LocalDate.of(1895, 12, 28);
+    private static Integer globalId = 0;
 
     public void save(Film film) {
-        film.setId(idGeneration());
+        film.setId(getNextId());
         films.put(film.getId(), film);
     }
 
@@ -37,41 +39,43 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public Film update(Film film) throws ValidationException {
+    public Film update(Film film) throws FilmNotFoundException {
         releaseDateCheck(film.getReleaseDate());
 
         if (!films.containsKey(film.getId()) || film.getId() < 1) {
-            ValidationException e = new ValidationException("Film с id = " + film.getId() + " не существует");
+            FilmNotFoundException e = new FilmNotFoundException("Film с id = " + film.getId() + " не существует");
             log.debug("Валидация не пройдена", e);
             throw e;
         }
 
-        save(film);
+        films.put(film.getId(), film);
 
         log.debug("Пользователь: {} сохранен.", film);
         return film;
     }
 
     @Override
-    public Film getFilmById(int filmId) {
+    public Film getFilmById(int filmId) throws FilmNotFoundException {
         Film film = null;
         for (Film filmFromMap : films.values()) {
             if (filmId == filmFromMap.getId()) {
                 film = filmFromMap;
             }
         }
+
+        if (film == null) {
+            FilmNotFoundException e = new FilmNotFoundException("Film с id = " + filmId + " не существует");
+            log.debug("Валидация не пройдена", e);
+            throw e;
+        }
         return film;
     }
 
-    private int idGeneration() {
-        int id = 1;
-        while (films.containsKey(id)) {
-            id++;
-        }
-        return id;
+    private static Integer getNextId() {
+        return ++globalId;
     }
 
-    private void releaseDateCheck(LocalDate releaseDate) {
+    private void releaseDateCheck(LocalDate releaseDate) throws ValidationException {
         if (releaseDate.isBefore(dateCheck)) {
             ValidationException e = new ValidationException("Дата релиза — раньше 28 декабря 1895 года");
             log.debug("Валидация не пройдена", e);

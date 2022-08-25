@@ -2,7 +2,7 @@ package ru.yandex.practicum.filmorate.storage;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
+import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.Collection;
@@ -13,9 +13,10 @@ import java.util.TreeMap;
 @Component
 public class InMemoryUserStorage implements UserStorage {
     private final Map<String, User> users = new TreeMap<>();
+    private static Integer globalId = 0;
 
     public void save(User user) {
-        user.setId(idGeneration());
+        user.setId(getNextId());
         users.put(user.getEmail(), user);
     }
 
@@ -37,16 +38,14 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public User update(User user) throws ValidationException {
+    public User update(User user) throws UserNotFoundException {
         for (String email : users.keySet()) {
             User oldUser = users.get(email);
-            if ((user.getId() == oldUser.getId()) && (!user.getEmail().equals(oldUser.getEmail()))) {
+            if (user.getId() == oldUser.getId()) {
                 users.remove(email, oldUser);
-                save(user);
-            }
-
-            if (user.getId() != oldUser.getId() || users.isEmpty() || user.getId() < 1){
-                ValidationException e = new ValidationException("User с id = " + user.getId() + " не существует");
+                users.put(user.getEmail(), user);
+            } else {
+                UserNotFoundException e = new UserNotFoundException("User с id = " + user.getId() + " не существует");
                 log.debug("Валидация не пройдена", e);
                 throw e;
             }
@@ -56,33 +55,27 @@ public class InMemoryUserStorage implements UserStorage {
             user.setName(user.getLogin());
         }
 
-        save(user);
-
         log.debug("Пользователь: {} сохранен.", user);
-        return user;
+        return users.get(user.getEmail());
     }
 
-    public User getUserById(int userId) {
+    public User getUserById(int userId) throws UserNotFoundException {
         User user = null;
         for (User userFromMap : users.values()) {
             if (userId == userFromMap.getId()) {
                 user = userFromMap;
             }
         }
+
+        if (user == null) {
+            UserNotFoundException e = new UserNotFoundException("User с id = " + userId + " не существует");
+            log.debug("Валидация не пройдена", e);
+            throw e;
+        }
         return user;
     }
 
-    private int idGeneration() {
-        int id = 1;
-
-        for (String email : users.keySet()) {
-            User oldUser = users.get(email);
-            int idUser = oldUser.getId();
-
-            if (id == idUser) {
-                id++;
-            }
-        }
-        return id;
+    private static Integer getNextId() {
+        return ++globalId;
     }
 }

@@ -1,10 +1,9 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
+import ru.yandex.practicum.filmorate.exception.IncorrectParameterException;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -39,8 +38,13 @@ public class FilmController {
     }
 
     @PutMapping("/films")
-    public Film update(@RequestBody @Valid Film film) throws ValidationException {
+    public Film update(@RequestBody @Valid Film film) throws FilmNotFoundException {
         return filmStorage.update(film);
+    }
+
+    @GetMapping("/films/{filmId}")
+    public Film getFilmById(@PathVariable int filmId) throws FilmNotFoundException {
+        return filmStorage.getFilmById(filmId);
     }
 
     @PutMapping("/films/{filmId}/like/{userId}")
@@ -57,26 +61,13 @@ public class FilmController {
         return filmService.deleteLike(filmId, userId);
     }
 
-    @GetMapping("/films/popular?count={countFilms}")
+    @GetMapping("/films/popular")
     public List<Film> getPopularFilms(
-            @RequestParam(value = "countFilms", defaultValue = "10", required = false) int countFilms)
-            throws FilmNotFoundException, UserNotFoundException {
+            @RequestParam(name = "count", defaultValue = "10", required = false) Integer countFilms)
+            throws FilmNotFoundException, UserNotFoundException, IncorrectParameterException {
+        if (countFilms <= 0) {
+            throw new IncorrectParameterException("countFilms");
+        }
         return filmService.getPopularFilms(countFilms);
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<Map<String, String>> handleValidation(final ValidationException e) {
-        return new ResponseEntity<Map<String, String>>(
-                Map.of("error message", e.getMessage()),
-                HttpStatus.BAD_REQUEST
-        );
-    }
-
-    @ExceptionHandler({UserNotFoundException.class, FilmNotFoundException.class})
-    public ResponseEntity<Map<String, String>> handleUserNotFound(final RuntimeException e) {
-        return new ResponseEntity<>(
-                Map.of("error message", e.getMessage()),
-                HttpStatus.NOT_FOUND
-        );
     }
 }
