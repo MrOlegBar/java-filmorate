@@ -9,16 +9,11 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class FilmService {
-    /*PUT /films/{id}/like/{userId} — пользователь ставит лайк фильму.
-    DELETE /films/{id}/like/{userId} — пользователь удаляет лайк.
-    GET /films/popular?count={count} — возвращает список из первых count фильмов по количеству лайков.
-    Если значение параметра count не задано, верните первые 10.*/
     private final FilmStorage filmStorage;
     private final UserStorage userStorage;
 
@@ -61,9 +56,14 @@ public class FilmService {
     }
 
     public List<Film> getPopularFilms(int countFilms) {
-        List<Film> popularFilms = new ArrayList<>();
+        Collection<Film> films = filmStorage.findAll();
+        return films.stream()
+                .sorted(this::compare)
+                .limit(countFilms)
+                .collect(Collectors.toList());
+    }
 
-
-        return popularFilms;
+    private int compare(Film f0, Film f1) {
+        return Integer.compare(f0.getLikes().size(), f1.getLikes().size());
     }
 }
