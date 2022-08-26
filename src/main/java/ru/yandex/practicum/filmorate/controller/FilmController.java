@@ -8,43 +8,38 @@ import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
-import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
 import javax.validation.Valid;
-import java.time.LocalDate;
 import java.util.*;
 
 @RestController
 public class FilmController {
     private final Map<Integer, Film> films = new TreeMap<>();
-    private final LocalDate dateCheck = LocalDate.of(1895, 12, 28);
     private final FilmService filmService;
-    private final FilmStorage filmStorage;
 
     @Autowired
-    public FilmController(FilmService filmService, FilmStorage filmStorage) {
+    public FilmController(FilmService filmService) {
         this.filmService = filmService;
-        this.filmStorage = filmStorage;
     }
 
     @GetMapping("/films")
     public Collection<Film> findAll() {
-        return filmStorage.findAll();
+        return filmService.findAll();
     }
 
     @PostMapping("/films")
     public Film create(@RequestBody @Valid Film film) throws ValidationException {
-        return filmStorage.create(film);
+        return filmService.create(film);
     }
 
     @PutMapping("/films")
     public Film update(@RequestBody @Valid Film film) throws FilmNotFoundException {
-        return filmStorage.update(film);
+        return filmService.update(film);
     }
 
     @GetMapping("/films/{filmId}")
     public Film getFilmById(@PathVariable int filmId) throws FilmNotFoundException {
-        return filmStorage.getFilmById(filmId);
+        return filmService.getFilmById(filmId);
     }
 
     @PutMapping("/films/{filmId}/like/{userId}")

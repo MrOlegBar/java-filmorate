@@ -22,7 +22,6 @@ class FilmControllerTests {
             , LocalDate.parse("1967-03-25")
             , 100L
             , null);
-
     @Autowired
     private TestRestTemplate restTemplate;
 
@@ -37,13 +36,13 @@ class FilmControllerTests {
                 , String.class);
 
         int actual1 = response.getStatusCodeValue();
-        System.out.println(response.getBody());
         String actual2 = response.getBody();
         String expected2 = "{\"id\":1" +
                 ",\"name\":\"name\"" +
                 ",\"description\":\"description\"" +
                 ",\"releaseDate\":\"1967-03-25\"" +
-                ",\"duration\":100}";
+                ",\"duration\":100" +
+                ",\"likes\":null}";
 
         assertEquals(actual1, 200);
         assertEquals(actual2, expected2);
@@ -63,7 +62,7 @@ class FilmControllerTests {
 
         int actual = response.getStatusCodeValue();
 
-        assertEquals(actual, 400);
+        assertEquals(actual, 500);
     }
 
     @Test
@@ -82,7 +81,7 @@ class FilmControllerTests {
 
         int actual = response.getStatusCodeValue();
 
-        assertEquals(actual, 400);
+        assertEquals(actual, 500);
     }
 
     @Test
@@ -99,7 +98,7 @@ class FilmControllerTests {
 
         int actual = response.getStatusCodeValue();
 
-        assertEquals(actual, 500);
+        assertEquals(actual, 400);
     }
 
     @Test
@@ -116,7 +115,7 @@ class FilmControllerTests {
 
         int actual = response.getStatusCodeValue();
 
-        assertEquals(actual, 400);
+        assertEquals(actual, 500);
     }
 
     @Test
@@ -145,7 +144,8 @@ class FilmControllerTests {
                 ",\"name\":\"Film Updated\"" +
                 ",\"description\":\"New film update description\"" +
                 ",\"releaseDate\":\"1989-04-17\"" +
-                ",\"duration\":190}";
+                ",\"duration\":190" +
+                ",\"likes\":null}";
 
         assertEquals(actual1, 200);
         assertEquals(actual2, expected2);
@@ -153,10 +153,6 @@ class FilmControllerTests {
 
     @Test
     void filmUpdateUnknown() {
-        ResponseEntity<String> response1 = this.restTemplate.postForEntity(URI_FILMS
-                , film
-                , String.class);
-
         Film updatedFilm = new Film(-1
                 ,"Film Updated"
                 , "New film update description"
@@ -173,15 +169,11 @@ class FilmControllerTests {
 
         int actual1 = response2.getStatusCodeValue();
 
-        assertEquals(actual1, 500);
+        assertEquals(actual1, 404);
     }
 
     @Test
     void filmGetAll() {
-        ResponseEntity<String> response1 = this.restTemplate.postForEntity(URI_FILMS
-                , film
-                , String.class);
-
         ResponseEntity<String> response2 = this.restTemplate.getForEntity(URI_FILMS
                 , String.class);
 
@@ -191,7 +183,8 @@ class FilmControllerTests {
                 ",\"name\":\"name\"" +
                 ",\"description\":\"description\"" +
                 ",\"releaseDate\":\"1967-03-25\"" +
-                ",\"duration\":100}]";
+                ",\"duration\":100" +
+                ",\"likes\":null}]";
 
         assertEquals(actual1, 200);
         assertEquals(actual2, expected2);

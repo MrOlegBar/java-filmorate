@@ -5,9 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.UserStorage;
+import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -19,6 +20,22 @@ public class UserService {
     @Autowired
     public UserService(UserStorage userStorage) {
         this.userStorage = userStorage;
+    }
+
+    public Collection<User> findAll() {
+        return userStorage.findAll();
+    }
+
+    public User create(User user) {
+        return userStorage.create(user);
+    }
+
+    public User update(User user) throws UserNotFoundException {
+        return userStorage.update(user);
+    }
+
+    public User getUserById(int userId) {
+        return userStorage.getUserById(userId);
     }
 
     public User addFriend(int userId, int friendId) throws UserNotFoundException {

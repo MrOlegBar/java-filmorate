@@ -42,7 +42,8 @@ class UserControllerTests {
                 ",\"login\":\"Login\"" +
                 ",\"name\":\"Login\"" +
                 ",\"email\":\"mail@mail.ru\"" +
-                ",\"birthday\":\"1946-08-20\"}";
+                ",\"birthday\":\"1946-08-20\"" +
+                ",\"friends\":null}";
 
         assertEquals(actual1, 200);
         assertEquals(actual2, expected2);
@@ -62,7 +63,7 @@ class UserControllerTests {
 
         int actual = response.getStatusCodeValue();
 
-        assertEquals(actual, 400);
+        assertEquals(actual, 500);
     }
 
     @Test
@@ -79,7 +80,7 @@ class UserControllerTests {
 
         int actual = response.getStatusCodeValue();
 
-        assertEquals(actual, 400);
+        assertEquals(actual, 500);
     }
 
     @Test
@@ -97,7 +98,7 @@ class UserControllerTests {
 
         int actual = response.getStatusCodeValue();
 
-        assertEquals(actual, 400);
+        assertEquals(actual, 500);
     }
 
     @Test
@@ -105,8 +106,7 @@ class UserControllerTests {
         ResponseEntity<String> response1 = this.restTemplate.postForEntity(URI_USERS
                 , user
                 , String.class);
-
-        User updatedUser = new User(1
+        User updatedUser = new User(4
                 ,"Login"
                 , "Nick Name"
                 , "mail@mail.ru"
@@ -123,11 +123,12 @@ class UserControllerTests {
         int actual1 = response2.getStatusCodeValue();
 
         String actual2 = response2.getBody();
-        String expected2 = "{\"id\":1" +
+        String expected2 = "{\"id\":4" +
                 ",\"login\":\"Login\"" +
                 ",\"name\":\"Nick Name\"" +
                 ",\"email\":\"mail@mail.ru\"" +
-                ",\"birthday\":\"1946-08-20\"}";
+                ",\"birthday\":\"1946-08-20\"" +
+                ",\"friends\":null}";
 
         assertEquals(actual1, 200);
         assertEquals(actual2, expected2);
@@ -155,7 +156,7 @@ class UserControllerTests {
 
         int actual = response2.getStatusCodeValue();
 
-        assertEquals(actual, 500);
+        assertEquals(actual, 404);
     }
 
     @Test
@@ -169,11 +170,12 @@ class UserControllerTests {
 
         int actual1 = response2.getStatusCodeValue();
         String actual2 = response2.getBody();
-        String expected2 = "[{\"id\":1" +
+        String expected2 = "[{\"id\":3" +
                 ",\"login\":\"Login\"" +
                 ",\"name\":\"Login\"" +
                 ",\"email\":\"mail@mail.ru\"" +
-                ",\"birthday\":\"1946-08-20\"}]";
+                ",\"birthday\":\"1946-08-20\"" +
+                ",\"friends\":null}]";
 
         assertEquals(actual1, 200);
         assertEquals(actual2, expected2);

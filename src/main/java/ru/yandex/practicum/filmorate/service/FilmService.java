@@ -4,10 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.FilmStorage;
-import ru.yandex.practicum.filmorate.storage.UserStorage;
+import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -21,6 +22,22 @@ public class FilmService {
     public FilmService(FilmStorage filmStorage, UserStorage userStorage) {
         this.filmStorage = filmStorage;
         this.userStorage = userStorage;
+    }
+
+    public Collection<Film> findAll() {
+        return filmStorage.findAll();
+    }
+
+    public Film create(Film film) throws ValidationException {
+        return filmStorage.create(film);
+    }
+
+    public Film update(Film film) throws FilmNotFoundException {
+        return filmStorage.update(film);
+    }
+
+    public Film getFilmById(int filmId) throws FilmNotFoundException {
+        return filmStorage.getFilmById(filmId);
     }
 
     public Film addLike(int filmId, int userId) throws FilmNotFoundException, UserNotFoundException {
