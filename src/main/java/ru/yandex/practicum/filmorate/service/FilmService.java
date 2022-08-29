@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.service;
 
+import lombok.Data;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
@@ -13,7 +14,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-@lombok.Data
+@Data
 public class FilmService {
     private final FilmStorage filmStorage;
     private final UserStorage userStorage;

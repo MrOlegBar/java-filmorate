@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.Data;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.exception.IncorrectParameterException;
@@ -12,9 +13,8 @@ import javax.validation.Valid;
 import java.util.*;
 
 @RestController
-@lombok.Data
+@Data
 public class FilmController {
-    private final Map<Integer, Film> films = new TreeMap<>();
     private final FilmService filmService;
 
     @GetMapping("/films")
