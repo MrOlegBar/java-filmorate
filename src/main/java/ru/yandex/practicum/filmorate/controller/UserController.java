@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
@@ -10,15 +9,11 @@ import javax.validation.Valid;
 import java.util.*;
 
 @RestController
+@lombok.Data
 public class UserController {
 
     private final Map<String, User> users = new TreeMap<>();
     private final UserService userService;
-
-    @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
 
     @GetMapping("/users")
     public Collection<User> findAll() {
