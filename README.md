@@ -26,4 +26,4 @@
 # UserController
 1. SELECT *
 - FROM user AS u
-- LEFT INNER JOIN 
+- LEFT INNER JOIN user AS u2 ON u2.repost_to=u.user.id
