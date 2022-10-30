@@ -1,8 +1,8 @@
 [Ссылка на схему БД](https://app.quickdatabasediagrams.com/#/d/P3E3M5)
 
 ![data base diagram](src/main/images/Data Base Diagram.png)
-### Примеры SQL запросов для основных http запросов в классе FilmController:
 ### [ссылка на класс FilmController](src/main/java/ru/yandex/practicum/filmorate/controller/FilmController.java)
+### **Примеры SQL запросов для основных операций приложения в классе FilmController:**
 ### **Создание таблиц**
 ```PostgreSQL
 CREATE TABLE films (
@@ -183,7 +183,7 @@ ON CONFLICT (film_id, user_id) DO NOTHING;
 DELETE FROM film_likes
 WHERE film_id = filmId AND user_id = userId;
 ```
-### Примеры SQL запросов для основных http запросов в классе UserController:
+### **Примеры SQL запросов для основных операций приложения в классе UserController:**
 ### [ссылка на класс UserController](src/main/java/ru/yandex/practicum/filmorate/controller/UserController.java)
 ### **Создание таблиц**
 ```PostgreSQL
