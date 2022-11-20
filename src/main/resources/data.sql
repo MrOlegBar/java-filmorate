@@ -1,21 +1,22 @@
-INSERT INTO ratings_MPA (rating_MPA) 
+MERGE INTO ratings_MPA (rating_MPA)
+KEY (rating_MPA)
 VALUES ('G'),
 	('PG'),
 	('PG-13'),
 	('R'),
-	('NC-17') 
-ON CONFLICT (rating_MPA) DO NOTHING;
+	('NC-17');
 
-INSERT INTO genres (genre)
+MERGE INTO genres (genre)
+KEY (genre)
 VALUES ('Комедия'),
         ('Драма'),
         ('Мультфильм'),
         ('Триллер'),
         ('Документальный'),
-        ('Боевик')
-ON CONFLICT (genre) DO NOTHING;
+        ('Боевик');
 
-INSERT INTO films (title, description, release_date, duration)
+MERGE INTO films (title, description, release_date, duration)
+KEY (title, description, release_date, duration)
 VALUES ('Побег из Шоушенка', 
 		'Бухгалтер Энди Дюфрейн обвинён в убийстве собственной жены и её любовника. 
 		Оказавшись в тюрьме Шоушенк, он сталкивается с жестокостью и беззаконием, 
@@ -67,10 +68,10 @@ VALUES ('Побег из Шоушенка',
 		'Сказания о Средиземье — это хроника Великой войны за Кольцо, войны, длившейся не одну тысячу лет. 
 		 Тот, кто владел Кольцом, получал власть над всеми живыми тварями, но был обязан служить злу.',
 		'1966-12-23',
-		161)
-ON CONFLICT (title, description, release_date, duration) DO NOTHING;
+		161);
 
-INSERT INTO film_genre (film_id, genre_id)
+MERGE INTO film_genre (film_id, genre_id)
+KEY (film_id, genre_id)
 VALUES (1, 2),
 		(2, 2),
 		(3, 6),
@@ -82,10 +83,10 @@ VALUES (1, 2),
 		(8, 1),
 		(8, 2),
 		(9, 6),
-		(10, 6)
-ON CONFLICT (film_id, genre_id) DO NOTHING;
+		(10, 6);
 
-INSERT INTO film_rating_mpa (film_id, rating_mpa_id)
+MERGE INTO film_rating_mpa (film_id, rating_mpa_id)
+KEY (film_id, rating_mpa_id)
 VALUES (1, 4),
 		(2, 4),
 		(3, 3),
@@ -95,18 +96,18 @@ VALUES (1, 4),
 		(7, 3),
 		(8, 4),
 		(9, 3),
-		(10, 4)
-ON CONFLICT (film_id, rating_mpa_id) DO NOTHING;
+		(10, 4);
 
-INSERT INTO users (login, name, email, birthday)
+MERGE INTO users (login, name, email, birthday)
+KEY (login, name, email, birthday)
 VALUES ('BadComedian', 'Евгений Баженов', 'BadComedian@gmail.com', '1991-05-24'),
 		('ADolin', 'Антон Долин', 'DolinAnton@yandex.ru', '1976-01-23'),
 		('Disney', 'Уолт Дисней', 'WaltDisneyProductions@gmail.com', '1901-12-05'),
 		('StarTrek', 'Джин Родденберри', 'StarTrek@yahoo.com', '1901-12-05'),
-		('Pokemon', 'Сатоси Тадзири', 'pokemon@yahoo.com', '1965-08-28')
-ON CONFLICT (login, name, email, birthday) DO NOTHING;
+		('Pokemon', 'Сатоси Тадзири', 'pokemon@yahoo.com', '1965-08-28');
 
-INSERT INTO film_likes (film_id, user_id)
+MERGE INTO film_likes (film_id, user_id)
+KEY (film_id, user_id)
 VALUES (1, 1),
 		(1, 2),
 		(1, 3),
@@ -126,15 +127,15 @@ VALUES (1, 1),
 		(7, 2),
 		(8, 3),
 		(9, 4),
-		(10, 5)
-ON CONFLICT (film_id, user_id) DO NOTHING;
+		(10, 5);
 
-INSERT INTO friendship_status (status)
+MERGE INTO friendship_status (status)
+KEY (status)
 VALUES ('Неподтверждённая'),
-		('Подтверждённая')
-ON CONFLICT (status) DO NOTHING;
+		('Подтверждённая');
 
-INSERT INTO user_friends (user_id, friend_id, friendship_status_id)
+MERGE INTO user_friends (user_id, friend_id, friendship_status_id)
+KEY (user_id, friend_id, friendship_status_id)
 VALUES (1, 2, 2),
 		(1, 3, 2),
 		(1, 4, 2),
@@ -154,5 +155,4 @@ VALUES (1, 2, 2),
 		(3, 5, 2),
 		(4, 5, 2),
 		(3, 2, 1),
-		(4, 3, 1)
-ON CONFLICT (user_id, friend_id, friendship_status_id) DO NOTHING;
+		(4, 3, 1);

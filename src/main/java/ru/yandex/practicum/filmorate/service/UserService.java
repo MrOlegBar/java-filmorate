@@ -1,40 +1,35 @@
 package ru.yandex.practicum.filmorate.service;
 
-import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-import java.util.Set;
 
-@Slf4j
 @Service
-@Data
+@AllArgsConstructor
 public class UserService {
-    private final UserStorage userStorage;
+    private final UserStorage userDbStorage;
 
     public Collection<User> findAll() {
-        return userStorage.findAll();
+        return userDbStorage.findAll();
     }
 
     public User create(User user) {
-        return userStorage.create(user);
+        return userDbStorage.create(user);
     }
 
     public User update(User user) throws UserNotFoundException {
-        return userStorage.update(user);
+        return userDbStorage.update(user);
     }
 
     public User getUserById(int userId) {
-        return userStorage.getUserById(userId);
+        return userDbStorage.getUserById(userId);
     }
 
-    public User addFriend(int userId, int friendId) throws UserNotFoundException {
+    /*public User addFriend(int userId, int friendId) throws UserNotFoundException {
         User user = userStorage.getUserById(userId);
         if (user != null) {
             User friend = userStorage.getUserById(friendId);
@@ -127,5 +122,5 @@ public class UserService {
             log.debug("Валидация не пройдена", e);
             throw e;
         }
-    }
+    }*/
 }

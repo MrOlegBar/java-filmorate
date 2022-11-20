@@ -1,6 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
@@ -10,7 +10,7 @@ import javax.validation.Valid;
 import java.util.*;
 
 @RestController
-@Data
+@AllArgsConstructor
 public class UserController {
     private final UserService userService;
 
@@ -34,7 +34,7 @@ public class UserController {
         return userService.getUserById(userId);
     }
 
-    @PutMapping("/users/{userId}/friends/{friendId}")
+    /*@PutMapping("/users/{userId}/friends/{friendId}")
     public User addFriend(@PathVariable("userId") int userId, @PathVariable("friendId") int friendId)
             throws UserNotFoundException {
         return userService.addFriend(userId, friendId);
@@ -55,5 +55,5 @@ public class UserController {
     public List<User> getCorporateFriends(@PathVariable("userId") int userId
             , @PathVariable("otherUserId") int otherUserId) throws UserNotFoundException {
         return userService.getCorporateFriends(userId, otherUserId);
-    }
+    }*/
 }

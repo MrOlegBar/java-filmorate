@@ -1,6 +1,9 @@
 package ru.yandex.practicum.filmorate.service;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
@@ -14,31 +17,32 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-@Data
+@AllArgsConstructor
 public class FilmService {
-    private final FilmStorage filmStorage;
-    private final UserStorage userStorage;
+    private final FilmStorage filmDbStorage;
+    private final UserStorage userDbStorage;
+
 
     public Collection<Film> findAll() {
-        return filmStorage.findAll();
+        return filmDbStorage.findAll();
     }
 
     public Film create(Film film) throws ValidationException {
-        return filmStorage.create(film);
+        return filmDbStorage.create(film);
     }
 
     public Film update(Film film) throws FilmNotFoundException {
-        return filmStorage.update(film);
+        return filmDbStorage.update(film);
     }
 
     public Film getFilmById(int filmId) throws FilmNotFoundException {
-        return filmStorage.getFilmById(filmId);
+        return filmDbStorage.getFilmById(filmId);
     }
 
     public Film addLike(int filmId, int userId) throws FilmNotFoundException, UserNotFoundException {
-        Film film = filmStorage.getFilmById(filmId);
+        Film film = filmDbStorage.getFilmById(filmId);
         if (film != null) {
-            User user = userStorage.getUserById(userId);
+            User user = userDbStorage.getUserById(userId);
             if (user != null) {
                 Set<Long> likesFilm = film.getLikes();
                 likesFilm.add((long) userId);
@@ -52,9 +56,9 @@ public class FilmService {
     }
 
     public Film deleteLike(int filmId, int userId) throws FilmNotFoundException, UserNotFoundException {
-        Film film = filmStorage.getFilmById(filmId);
+        Film film = filmDbStorage.getFilmById(filmId);
         if (film != null) {
-            User user = userStorage.getUserById(userId);
+            User user = userDbStorage.getUserById(userId);
             if (user != null) {
                 Set<Long> likesFilm = film.getLikes();
                 likesFilm.remove((long) userId);
@@ -68,7 +72,7 @@ public class FilmService {
     }
 
     public List<Film> getPopularFilms(Integer countFilms) {
-        Collection<Film> films = filmStorage.findAll();
+        Collection<Film> films = filmDbStorage.findAll();
         return films.stream()
                 .sorted(this::compare)
                 .limit(countFilms)

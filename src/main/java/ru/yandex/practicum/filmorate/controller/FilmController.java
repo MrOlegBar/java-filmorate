@@ -1,6 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.exception.IncorrectParameterException;
@@ -13,7 +13,7 @@ import javax.validation.Valid;
 import java.util.*;
 
 @RestController
-@Data
+@AllArgsConstructor
 public class FilmController {
     private final FilmService filmService;
 

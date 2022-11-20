@@ -1,17 +1,19 @@
 package ru.yandex.practicum.filmorate.storage.user;
 
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
 
 import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
 
-@Slf4j
-@Component
+@Component("inMemoryUserStorage")
 public class InMemoryUserStorage implements UserStorage {
+    private final Logger log = LoggerFactory.getLogger(InMemoryFilmStorage.class);
     private final Map<String, User> users = new TreeMap<>();
     private static Integer globalId = 0;
 
