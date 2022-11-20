@@ -49,9 +49,9 @@ public class UserDbStorage implements UserStorage {
                 rs.getString("NAME"),
                 rs.getString("EMAIL"),
                 rs.getDate("BIRTHDAY").toLocalDate(),
-                friends
-                }
-        );
+                friends);
+        }
+        return null;
     }
 
     @Override
