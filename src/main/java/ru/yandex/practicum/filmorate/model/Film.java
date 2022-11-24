@@ -21,7 +21,8 @@ public class Film {
     @NotNull
     private LocalDate releaseDate;
     @Digits(integer = 2_147_483_647, fraction = 0)
-    @Positive @NotNull
+    @Positive
+    @NotNull
     private long duration;
     private Set<Long> likes = new HashSet<>();
 

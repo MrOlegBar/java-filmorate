@@ -1,8 +1,8 @@
-package ru.yandex.practicum.filmorate.storage.film;
+package ru.yandex.practicum.filmorate.dao.impl.film;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.dao.FilmStorage;
 import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -13,8 +13,8 @@ import java.util.Map;
 import java.util.TreeMap;
 
 @Component("inMemoryFilmStorage")
+@Slf4j
 public class InMemoryFilmStorage implements FilmStorage {
-    private final Logger log = LoggerFactory.getLogger(InMemoryFilmStorage.class);
     private final Map<Integer, Film> films = new TreeMap<>();
     private final LocalDate dateCheck = LocalDate.of(1895, 12, 28);
     private static Integer globalId = 0;
