@@ -25,12 +25,12 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public Collection<Film> findAll() {
+    public Collection<Film> getAllFilms() {
         return films.values();
     }
 
     @Override
-    public Film create(Film film) throws ValidationException {
+    public Film createFilm(Film film) throws ValidationException {
         releaseDateCheck(film.getReleaseDate());
 
         save(film);
@@ -40,7 +40,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public Film update(Film film) throws FilmNotFoundException {
+    public Film updateFilm(Film film) throws FilmNotFoundException {
         releaseDateCheck(film.getReleaseDate());
 
         if (!films.containsKey(film.getId()) || film.getId() < 1) {
@@ -53,6 +53,31 @@ public class InMemoryFilmStorage implements FilmStorage {
 
         log.debug("Пользователь: {} сохранен.", film);
         return film;
+    }
+
+    @Override
+    public Collection<Film> deleteFilmById(int id) {
+        return null;
+    }
+
+    @Override
+    public Collection<Film> deleteAllFilms() {
+        return null;
+    }
+
+    @Override
+    public Film addLike(int filmId, int userId) {
+        return null;
+    }
+
+    @Override
+    public Film deleteLike(int filmId, int userId) {
+        return null;
+    }
+
+    @Override
+    public Collection<Film> getPopularFilms(Integer countFilms) {
+        return null;
     }
 
     @Override

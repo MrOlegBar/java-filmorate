@@ -1,0 +1,8 @@
+UPDATE FILMS
+SET TITLE = ?,
+    DESCRIPTION = ?,
+    RELEASE_DATE = ?,
+    DURATION = ?,
+    RATING_MPA_ID = ?,
+    RATE = ?
+WHERE FILM_ID = ?

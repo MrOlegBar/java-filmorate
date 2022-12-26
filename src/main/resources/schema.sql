@@ -10,7 +10,8 @@ CREATE TABLE IF NOT EXISTS films (
     description varchar(200) UNIQUE,
     release_date date NOT NULL,
     duration int NOT NULL CHECK (duration > 0),
-    rating_MPA_id INTEGER REFERENCES ratings_MPA (rating_MPA_id) ON DELETE RESTRICT
+    rating_MPA_id INTEGER REFERENCES ratings_MPA (rating_MPA_id) ON DELETE RESTRICT,
+    rate int CHECK (rate > 0)
 );
 CREATE UNIQUE INDEX IF NOT EXISTS film_id_idx ON films (film_id);
 
@@ -32,7 +33,7 @@ CREATE TABLE IF NOT EXISTS users (
     login varchar NOT NULL CHECK (login != '') UNIQUE,
     name varchar CHECK (name != ''),
     email varchar NOT NULL CHECK (email LIKE '%@%.%') UNIQUE,
-    birthday date NOT NULL CHECK (birthday <= CURRENT_DATE),
+    birthday date NOT NULL CHECK (birthday <= CURRENT_DATE)
 );
 CREATE UNIQUE INDEX IF NOT EXISTS user_id_idx ON users (user_id);
 
@@ -56,3 +57,23 @@ CREATE TABLE IF NOT EXISTS user_friends (
     CONSTRAINT pk_user_friends PRIMARY KEY (user_id, friend_id)
 );
 CREATE UNIQUE INDEX IF NOT EXISTS user_friend_id_idx ON user_friends (user_id, friend_id);
+
+CREATE OR REPLACE VIEW FILMS_RATING_MPA_VIEW AS
+SELECT f.film_id,
+       f.TITLE,
+       f.DESCRIPTION,
+       f.RELEASE_DATE,
+       f.DURATION,
+       f.RATING_MPA_ID,
+       rm.RATING_MPA,
+       f.rate
+FROM FILMS f
+LEFT OUTER JOIN RATINGS_MPA rm ON f.RATING_MPA_ID = rm.RATING_MPA_ID;
+
+CREATE OR REPLACE VIEW FILMS_GENRES_VIEW AS
+SELECT f.film_id,
+       g.genre_id,
+       g.genre
+FROM FILMS f
+         LEFT OUTER JOIN FILM_GENRE fg on f.FILM_ID = fg.FILM_ID
+         LEFT OUTER JOIN GENRES g on g.GENRE_ID = fg.GENRE_ID;

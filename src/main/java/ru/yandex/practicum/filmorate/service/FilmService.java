@@ -4,79 +4,45 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.dao.FilmStorage;
-import ru.yandex.practicum.filmorate.dao.UserStorage;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Collection;
 
 @Service
 @AllArgsConstructor
 public class FilmService {
     private final FilmStorage filmDbStorage;
-    private final UserStorage userDbStorage;
 
-
-    public Collection<Film> findAll() {
-        return filmDbStorage.findAll();
+    public Film createFilm(Film film) {
+        return filmDbStorage.createFilm(film);
     }
-
-    public Film create(Film film) throws ValidationException {
-        return filmDbStorage.create(film);
-    }
-
-    public Film update(Film film) throws FilmNotFoundException {
-        return filmDbStorage.update(film);
-    }
-
-    public Film getFilmById(int filmId) throws FilmNotFoundException {
+    public Film getFilmById(int filmId) {
         return filmDbStorage.getFilmById(filmId);
     }
 
+    public Collection<Film> getAllFilms() {
+        return filmDbStorage.getAllFilms();
+    }
+
+    public Film updateFilm(Film film) {
+        return filmDbStorage.updateFilm(film);
+    }
+
+    public Collection<Film> deleteFilmById(int filmId) {
+        return filmDbStorage.deleteFilmById(filmId);
+    }
+    public Collection<Film> deleteAllFilms() {
+        return filmDbStorage.deleteAllFilms();
+    }
     public Film addLike(int filmId, int userId) throws FilmNotFoundException, UserNotFoundException {
-        Film film = filmDbStorage.getFilmById(filmId);
-        if (film != null) {
-            User user = userDbStorage.getUserById(userId);
-            if (user != null) {
-                Set<Long> likesFilm = film.getLikes();
-                likesFilm.add((long) userId);
-                return film;
-            } else {
-                throw new UserNotFoundException(String.format("Пользователь с id = %s не найден", userId));
-            }
-        } else {
-            throw new FilmNotFoundException(String.format("Фильм с id = %s не найден", filmId));
-        }
+        return filmDbStorage.addLike(filmId, userId);
     }
-
     public Film deleteLike(int filmId, int userId) throws FilmNotFoundException, UserNotFoundException {
-        Film film = filmDbStorage.getFilmById(filmId);
-        if (film != null) {
-            User user = userDbStorage.getUserById(userId);
-            if (user != null) {
-                Set<Long> likesFilm = film.getLikes();
-                likesFilm.remove((long) userId);
-                return film;
-            } else {
-                throw new UserNotFoundException(String.format("Пользователь с id = %s не найден", userId));
-            }
-        } else {
-            throw new FilmNotFoundException(String.format("Фильм с id = %s не найден", filmId));
-        }
+        return filmDbStorage.deleteLike(filmId, userId);
     }
 
-    public List<Film> getPopularFilms(Integer countFilms) {
-        Collection<Film> films = filmDbStorage.findAll();
-        return films.stream()
-                .sorted(this::compare)
-                .limit(countFilms)
-                .collect(Collectors.toList());
-    }
-
-    private int compare(Film f0, Film f1) {
-        return -1 * Integer.compare(f0.getLikes().size(), f1.getLikes().size());
+    public Collection<Film> getPopularFilms(Integer count) {
+        return filmDbStorage.getPopularFilms(count);
     }
 }

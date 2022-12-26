@@ -1,36 +1,42 @@
 package ru.yandex.practicum.filmorate.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.*;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Builder
 public class Film {
-    private int id;
-    @NotBlank
-    private String name;
-    @Size(max = 200)
-    private String description;
-    @NotNull
-    private LocalDate releaseDate;
     @Digits(integer = 2_147_483_647, fraction = 0)
-    @Positive
+    private int id;
+    @NotBlank(message = "Название фильма отсутствует.")
+    private String name;
+    @Size(max = 200, message = "Количество символов в описании фильма > 200")
     @NotNull
-    private long duration;
-    private Set<Long> likes = new HashSet<>();
+    private String description;
+    @NotNull(message = "Дата выхода фильма отсутствует.")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate releaseDate;
+    @Digits(integer = 32_767, fraction = 0)
+    @Positive(message = "Задано не допустимое значение продолжительности фильма.")
+    private short duration;
+    @NotNull(message = "Рейтинг фильма отсутствует.")
+    private RatingMpa mpa;
+    private Integer rate;
+    private Set<Integer> likes;
+    private List<Genre> genres;
 
-    public Film(String name, String description, LocalDate releaseDate, long duration, Set<Long> likes) {
-        this.name = name;
-        this.description = description;
-        this.releaseDate = releaseDate;
-        this.duration = duration;
-        this.likes = likes;
+    public Map<String, Object> toMap(Film film) {
+        Map<String, Object> values = new HashMap<>();
+        values.put("title", film.getName());
+        values.put("description", film.getDescription());
+        values.put("release_date", film.getReleaseDate());
+        values.put("duration",  film.getDuration());
+        values.put("rating_MPA_id",  film.getMpa().getId());
+        values.put("rate",  film.getRate());
+        return values;
     }
 }
