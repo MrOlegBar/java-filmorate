@@ -7,7 +7,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.model.user.User;
 
 import java.time.LocalDate;
 
@@ -16,12 +16,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserControllerTests {
     final String URI_USERS = "/users";
-
-    User user = new User("Login"
-            , ""
-            , "mail@mail.ru"
-            , LocalDate.parse("1946-08-20")
-            , null);
+    User user = User.builder()
+            .login("Login")
+            .name("")
+            .email("mail@mail.ru")
+            .birthday(LocalDate.parse("1946-08-20"))
+            .build();
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -51,11 +51,12 @@ class UserControllerTests {
 
     @Test
     void userCreateFailEmail() {
-        User user = new User("Login"
-                , "Name"
-                , "mail.ru"
-                , LocalDate.parse("1980-08-20")
-                , null);
+        User user = User.builder()
+                .login("Login")
+                .name("Name")
+                .email("mail.ru")
+                .birthday(LocalDate.parse("1980-08-20"))
+                .build();
 
         ResponseEntity<String> response = this.restTemplate.postForEntity(URI_USERS
                 , user
@@ -68,11 +69,12 @@ class UserControllerTests {
 
     @Test
     void userCreateFailLogin() {
-        User user = new User("Login Fail"
-                , "Name"
-                , "mail@mail.ru"
-                , LocalDate.parse("1980-08-20")
-                , null);
+        User user = User.builder()
+                .login("Login Fail")
+                .name("Name")
+                .email("mail@mail.ru")
+                .birthday(LocalDate.parse("1980-08-20"))
+                .build();
 
         ResponseEntity<String> response = this.restTemplate.postForEntity(URI_USERS
                 , user
@@ -85,12 +87,12 @@ class UserControllerTests {
 
     @Test
     void userCreateFailBirthday() {
-        User user = new User(
-                "Login"
-                , "Name"
-                , "mail@mail.ru"
-                , LocalDate.parse("2446-08-20")
-                , null);
+        User user = User.builder()
+                .login("Login")
+                .name("Name")
+                .email("mail@mail.ru")
+                .birthday(LocalDate.parse("2446-08-20"))
+                .build();
 
         ResponseEntity<String> response = this.restTemplate.postForEntity(URI_USERS
                 , user
@@ -106,12 +108,14 @@ class UserControllerTests {
         ResponseEntity<String> response1 = this.restTemplate.postForEntity(URI_USERS
                 , user
                 , String.class);
-        User updatedUser = new User(4
-                ,"Login"
-                , "Nick Name"
-                , "mail@mail.ru"
-                , LocalDate.parse("1946-08-20")
-                , null);
+
+        User updatedUser = User.builder()
+                .id(4)
+                .login("Login")
+                .name("Nick Name")
+                .email("mail@mail.ru")
+                .birthday(LocalDate.parse("1946-08-20"))
+                .build();
 
         HttpEntity<User> httpEntity = new HttpEntity<>(updatedUser);
 
@@ -140,12 +144,13 @@ class UserControllerTests {
                 , user
                 , String.class);
 
-        User updatedUser = new User(-1
-                ,"Login"
-                , "Nick Name"
-                , "mail@mail.ru"
-                , LocalDate.parse("1946-08-20")
-                , null);
+        User updatedUser = User.builder()
+                .id(-1)
+                .login("Login")
+                .name("Nick Name")
+                .email("mail@mail.ru")
+                .birthday(LocalDate.parse("1946-08-20"))
+                .build();
 
         HttpEntity<User> httpEntity = new HttpEntity<>(updatedUser);
 

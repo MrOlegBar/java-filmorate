@@ -9,10 +9,10 @@ import ru.yandex.practicum.filmorate.dao.impl.genre.GenreDbStorage;
 import ru.yandex.practicum.filmorate.dao.impl.user.UserDbStorage;
 import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
-import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.film.Film;
 import lombok.extern.slf4j.Slf4j;
-import ru.yandex.practicum.filmorate.model.Genre;
-import ru.yandex.practicum.filmorate.model.RatingMpa;
+import ru.yandex.practicum.filmorate.model.film.Genre;
+import ru.yandex.practicum.filmorate.model.film.RatingMpa;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -24,8 +24,8 @@ import java.util.*;
 public class FilmDbStorage implements FilmStorage {
 
     private final JdbcTemplate jdbcTemplate;
-    GenreDbStorage genreDbStorage;
-    UserDbStorage userDbStorage;
+    private final GenreDbStorage genreDbStorage;
+    private final UserDbStorage userDbStorage;
 
     public FilmDbStorage(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -35,7 +35,11 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public Film createFilm(Film film) {
-        film.setId(saveFilmAndReturnId(film));
+        SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("films")
+                .usingGeneratedKeyColumns("film_id");
+
+        film.setId(simpleJdbcInsert.executeAndReturnKey(film.toMap(film)).intValue());
 
         if (film.getGenres() != null) {
             String sqlQueryForFilmGenre = "INSERT INTO FILM_GENRE(FILM_ID, GENRE_ID) VALUES (?, ?)";
@@ -156,12 +160,6 @@ public class FilmDbStorage implements FilmStorage {
         jdbcTemplate.update(sqlQuery, filmId);
         return getFilmById(filmId);
     }
-    private int saveFilmAndReturnId(Film film) {
-        SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("films")
-                .usingGeneratedKeyColumns("film_id");
-        return simpleJdbcInsert.executeAndReturnKey(film.toMap(film)).intValue();
-    }
     private Film mapRowToFilm(ResultSet resultSet, int rowNum) throws SQLException {
         Film film = Film.builder()
                 .id(resultSet.getInt("film_id"))
@@ -176,8 +174,9 @@ public class FilmDbStorage implements FilmStorage {
                 .rate(resultSet.getInt("rate"))
                 .build();
 
-        String sqlQueryForGenres = "SELECT * FROM FILMS_GENRES_VIEW WHERE FILM_ID = ?";
-        if (film != null) {
+        if (film.getId() != 0) {
+            String sqlQueryForGenres = "SELECT * FROM FILMS_GENRES_VIEW WHERE FILM_ID = ?";
+
             List<Genre> genres = new ArrayList<>(jdbcTemplate.query(sqlQueryForGenres, genreDbStorage::mapRowToGenre, film.getId()));
             if (genres.contains(null)) {
                 genres = new ArrayList<>();
@@ -185,9 +184,9 @@ public class FilmDbStorage implements FilmStorage {
             film.setGenres(genres);
         }
 
+        if (film.getId() != 0) {
+            String sqlQueryForLikes = "SELECT * FROM FILM_LIKES WHERE FILM_ID = ?";
 
-        String sqlQueryForLikes = "SELECT * FROM FILM_LIKES WHERE FILM_ID = ?";
-        if (film != null) {
             Set<Integer> likes = new TreeSet<>(jdbcTemplate.query(sqlQueryForLikes, userDbStorage::mapRowToUserId, film.getId()));
             film.setLikes(likes);
         }

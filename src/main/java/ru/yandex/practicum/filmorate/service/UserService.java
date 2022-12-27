@@ -3,7 +3,7 @@ package ru.yandex.practicum.filmorate.service;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
-import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.model.user.User;
 import ru.yandex.practicum.filmorate.dao.UserStorage;
 
 import java.util.Collection;
@@ -13,12 +13,12 @@ import java.util.Collection;
 public class UserService {
     private final UserStorage userDbStorage;
 
-    public Collection<User> findAll() {
-        return userDbStorage.findAll();
-    }
-
     public User create(User user) {
         return userDbStorage.create(user);
+    }
+
+    public Collection<User> findAll() {
+        return userDbStorage.findAll();
     }
 
     public User update(User user) throws UserNotFoundException {

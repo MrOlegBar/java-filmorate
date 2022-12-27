@@ -14,7 +14,6 @@ VALUES ('Комедия'),
         ('Триллер'),
         ('Документальный'),
         ('Боевик');
-
 /*
 MERGE INTO films (title, description, release_date, duration, rating_MPA_id, rate)
 KEY (title, description, release_date, duration, rating_MPA_id, rate)
@@ -137,11 +136,6 @@ VALUES (1, 1),
 		(8, 3),
 		(9, 4),
 		(10, 5);
-
-MERGE INTO friendship_status (status)
-KEY (status)
-VALUES ('Неподтверждённая'),
-		('Подтверждённая');
 
 MERGE INTO user_friends (user_id, friend_id, friendship_status_id)
 KEY (user_id, friend_id, friendship_status_id)

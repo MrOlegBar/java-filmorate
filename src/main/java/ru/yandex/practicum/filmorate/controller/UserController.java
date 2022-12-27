@@ -4,10 +4,13 @@ import lombok.AllArgsConstructor;
 
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
-import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
+import ru.yandex.practicum.filmorate.model.film.Film;
+import ru.yandex.practicum.filmorate.model.user.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.util.*;
 
 @RestController
@@ -15,14 +18,14 @@ import java.util.*;
 public class UserController {
     private final UserService userService;
 
+    @PostMapping("/users")
+    public User postUser(@RequestBody @Valid User user) {
+        return userService.create(user);
+    }
+
     @GetMapping("/users")
     public Collection<User> findAll() {
         return userService.findAll();
-    }
-
-    @PostMapping("/users")
-    public User create(@RequestBody @Valid User user) {
-        return userService.create(user);
     }
 
     @PutMapping("/users")

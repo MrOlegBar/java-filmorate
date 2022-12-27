@@ -1,15 +1,13 @@
-package ru.yandex.practicum.filmorate.model;
+package ru.yandex.practicum.filmorate.model.user;
 
 import lombok.Builder;
 
 import javax.validation.constraints.Digits;
-import java.util.HashMap;
-import java.util.Map;
 
 @Builder
-public class FilmGenre {
+public class UserFriends {
     @Digits(integer = 2_147_483_647, fraction = 0)
-    private final int filmId;
+    private final int userId;
     @Digits(integer = 2_147_483_647, fraction = 0)
-    private final int genreId;
+    private final int friendId;
 }

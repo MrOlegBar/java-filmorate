@@ -1,6 +1,6 @@
 package ru.yandex.practicum.filmorate.dao;
 
-import ru.yandex.practicum.filmorate.model.RatingMpa;
+import ru.yandex.practicum.filmorate.model.film.RatingMpa;
 
 import java.util.Collection;
 

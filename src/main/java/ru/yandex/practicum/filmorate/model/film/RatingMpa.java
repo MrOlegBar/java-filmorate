@@ -1,14 +1,14 @@
-package ru.yandex.practicum.filmorate.model;
+package ru.yandex.practicum.filmorate.model.film;
 
 import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.Digits;
 
-@Builder
 @Data
-public class Genre {
+@Builder
+public class RatingMpa {
     @Digits(integer = 2_147_483_647, fraction = 0)
-    private final int id;
-    private final String name;
+    private int id;
+    private String name;
 }
