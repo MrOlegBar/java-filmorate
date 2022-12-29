@@ -56,31 +56,6 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public Collection<Film> deleteFilmById(int id) {
-        return null;
-    }
-
-    @Override
-    public Collection<Film> deleteAllFilms() {
-        return null;
-    }
-
-    @Override
-    public Film addLike(int filmId, int userId) {
-        return null;
-    }
-
-    @Override
-    public Film deleteLike(int filmId, int userId) {
-        return null;
-    }
-
-    @Override
-    public Collection<Film> getPopularFilms(Integer countFilms) {
-        return null;
-    }
-
-    @Override
     public Film getFilmById(int filmId) throws FilmNotFoundException {
         Film film = null;
         for (Film filmFromMap : films.values()) {

@@ -19,30 +19,31 @@ import java.util.Objects;
 @Slf4j
 public class ErrorHandler {
 
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleIncorrectParameterException(final IncorrectParameterException e) {
-        log.error(e.getMessage(), e);
-        return new ErrorResponse(
-                String.format("Ошибка с полем \"%s\".", e.getParameter())
-        );
-    }
-
     @ExceptionHandler({javax.validation.ValidationException.class, ValidationException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleValidation(final RuntimeException e) {
+        log.error(e.getMessage(), e);
         return new ErrorResponse(e.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleMethodArgumentValidation(MethodArgumentNotValidException e) {
+        log.error(e.getMessage(), e);
         return new ErrorResponse(String.valueOf(Objects.requireNonNull(e.getFieldError()).getDefaultMessage()));
+    }
+
+    @ExceptionHandler({IncorrectParameterException.class})
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleIncorrectParameterException(final RuntimeException e) {
+        log.error(e.getMessage(), e);
+        return new ErrorResponse(e.getMessage());
     }
 
     @ExceptionHandler({UserNotFoundException.class, FilmNotFoundException.class, EmptyResultDataAccessException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleNotFound(final RuntimeException e) {
+        log.error(e.getMessage(), e);
         return new ErrorResponse("По такому id данных не существует.");
     }
 }

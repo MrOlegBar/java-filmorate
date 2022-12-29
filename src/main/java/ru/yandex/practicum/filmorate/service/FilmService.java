@@ -2,8 +2,6 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
-import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.film.Film;
 import ru.yandex.practicum.filmorate.dao.FilmStorage;
 
@@ -27,22 +25,5 @@ public class FilmService {
 
     public Film updateFilm(Film film) {
         return filmDbStorage.updateFilm(film);
-    }
-
-    public Collection<Film> deleteFilmById(int filmId) {
-        return filmDbStorage.deleteFilmById(filmId);
-    }
-    public Collection<Film> deleteAllFilms() {
-        return filmDbStorage.deleteAllFilms();
-    }
-    public Film addLike(int filmId, int userId) throws FilmNotFoundException, UserNotFoundException {
-        return filmDbStorage.addLike(filmId, userId);
-    }
-    public Film deleteLike(int filmId, int userId) throws FilmNotFoundException, UserNotFoundException {
-        return filmDbStorage.deleteLike(filmId, userId);
-    }
-
-    public Collection<Film> getPopularFilms(Integer count) {
-        return filmDbStorage.getPopularFilms(count);
     }
 }

@@ -10,6 +10,7 @@ import java.util.*;
 @Data
 @Builder
 public class User {
+    @Digits(integer = 2_147_483_647, fraction = 0)
     private int id;
     @Pattern(regexp = "\\S*", message = "Логин пользователя не должен содержать пустой символ.") private String login;
     private String name;
