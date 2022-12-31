@@ -23,7 +23,6 @@ public class Film {
     @Digits(integer = 32_767, fraction = 0)
     @Positive(message = "Задано не допустимое значение продолжительности фильма.")
     private short duration;
-    @NotNull(message = "Рейтинг фильма отсутствует.")
     private RatingMpa mpa;
     private Integer rate;
     private Set<Integer> likes;

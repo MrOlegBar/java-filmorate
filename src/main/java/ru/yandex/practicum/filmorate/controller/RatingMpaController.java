@@ -16,10 +16,10 @@ public class RatingMpaController {
     @GetMapping(value = { "/mpa", "/mpa/{ratingMpaId}"})
     @ResponseBody
     public Object getRatingMpaS(@PathVariable(required = false) Integer ratingMpaId) throws RatingMpaNotFoundException {
-        if (ratingMpaId != null) {
-            return ratingMpaService.getRatingMpaById(ratingMpaId);
-        } else {
+        if (ratingMpaId == null) {
             return ratingMpaService.getAllRatingsMpa();
+        } else {
+            return ratingMpaService.getRatingMpaById(ratingMpaId);
         }
     }
 }

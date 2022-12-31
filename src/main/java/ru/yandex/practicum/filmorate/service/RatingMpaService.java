@@ -2,7 +2,8 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.dao.impl.RatingMpaDbStorage;
+import ru.yandex.practicum.filmorate.storage.impl.dao.RatingMpaDbStorage;
+import ru.yandex.practicum.filmorate.exception.RatingMpaNotFoundException;
 import ru.yandex.practicum.filmorate.model.film.RatingMpa;
 
 import java.util.Collection;
@@ -12,11 +13,11 @@ import java.util.Collection;
 public class RatingMpaService {
     private final RatingMpaDbStorage ratingMpaStorage;
 
-    public RatingMpa getRatingMpaById(int ratingMpaId) {
-        return ratingMpaStorage.getRatingMpaById(ratingMpaId);
+    public Collection<RatingMpa> getAllRatingsMpa() throws RatingMpaNotFoundException {
+        return ratingMpaStorage.getAllRatingsMpa();
     }
 
-    public Collection<RatingMpa> getAllRatingsMpa() {
-        return ratingMpaStorage.getAllRatingsMpa();
+    public RatingMpa getRatingMpaById(int ratingMpaId) throws RatingMpaNotFoundException {
+        return ratingMpaStorage.getRatingMpaById(ratingMpaId);
     }
 }

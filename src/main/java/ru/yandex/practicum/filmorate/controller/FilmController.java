@@ -15,25 +15,24 @@ public class FilmController {
     private final FilmService filmService;
 
     @PostMapping("/films")
-    public Film postFilm(@Valid @RequestBody Film film) {
+    public Film postFilm(@Valid @RequestBody Film film) throws ValidationException, FilmNotFoundException {
         if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
-            throw new ValidationException("Дата релиза — не раньше 28 декабря 1895 года.");
+            throw new ValidationException("Дата релиза должны быть не раньше 28.12.1895 г.");
         }
         return filmService.createFilm(film);
     }
 
     @GetMapping(value = { "/films", "/films/{filmId}"})
-    //@ResponseStatus
     public Object getFilmS(@PathVariable(required = false) Integer filmId) throws FilmNotFoundException {
-        if (filmId != null) {
-            return filmService.getFilmById(filmId);
-        } else {
+        if (filmId == null) {
             return filmService.getAllFilms();
+        } else {
+            return filmService.getFilmById(filmId);
         }
     }
 
     @PutMapping("/films")
-    public Film putFilm(@RequestBody @Valid Film film) throws FilmNotFoundException {
+    public Film putFilm(@RequestBody @Valid Film film) throws FilmNotFoundException, UserNotFoundException {
         return filmService.updateFilm(film);
     }
 }

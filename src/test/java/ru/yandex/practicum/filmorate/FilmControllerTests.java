@@ -2,11 +2,19 @@ package ru.yandex.practicum.filmorate;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.ResponseEntity;
+import ru.yandex.practicum.filmorate.model.film.Film;
+import ru.yandex.practicum.filmorate.model.film.RatingMpa;
+
+import java.time.LocalDate;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@AutoConfigureTestDatabase
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
 class FilmControllerTests {
     final String URI_FILMS = "/films";
@@ -16,18 +24,22 @@ class FilmControllerTests {
     /*Film film = new Film("name"
             , "description"
             , LocalDate.parse("1967-03-25")
-            , 100L
-            , null);*/
+            , (short) 100);*/
+
+    Film film = Film.builder()
+            .name("name")
+            .description("description")
+            .releaseDate(LocalDate.parse("1967-03-25"))
+            .duration((short) 100)
+            .build();
 
     @Test
     public void contextLoads() {
     }
 
-    /*@Test
+    @Test
     public void filmCreate() {
-        ResponseEntity<String> response = this.restTemplate.postForEntity(URI_FILMS
-                , film
-                , String.class);
+        ResponseEntity<String> response = this.restTemplate.postForEntity(URI_FILMS, film, String.class);
 
         int actual1 = response.getStatusCodeValue();
         String actual2 = response.getBody();
@@ -40,7 +52,7 @@ class FilmControllerTests {
 
         assertEquals(actual1, 200);
         assertEquals(actual2, expected2);
-    }*/
+    }
 
     /*@Test
     void filmCreateFailName() {

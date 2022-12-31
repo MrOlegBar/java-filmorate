@@ -13,10 +13,10 @@ public class GenreController {
     @GetMapping(value = { "/genres", "/genres/{genreId}"})
     @ResponseBody
     public Object getGenreS(@PathVariable(required = false) Integer genreId) throws GenreNotFoundException {
-        if (genreId != null) {
-            return genreService.getGenreById(genreId);
-        } else {
+        if (genreId == null) {
             return genreService.getAllGenres();
+        } else {
+            return genreService.getGenreById(genreId);
         }
     }
 }

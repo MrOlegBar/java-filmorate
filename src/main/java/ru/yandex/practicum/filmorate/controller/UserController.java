@@ -3,7 +3,7 @@ package ru.yandex.practicum.filmorate.controller;
 import lombok.AllArgsConstructor;
 
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
+import ru.yandex.practicum.filmorate.exception.FriendNotFoundException;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.user.User;
 import ru.yandex.practicum.filmorate.service.UserService;
@@ -16,22 +16,22 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/users")
-    public User postUser(@RequestBody @Valid User user) {
+    public User postUser(@RequestBody @Valid User user) throws UserNotFoundException, FriendNotFoundException {
         return userService.create(user);
     }
 
-    @PutMapping("/users")
-    public User update(@RequestBody @Valid User user) throws UserNotFoundException {
-        return userService.update(user);
+    @GetMapping(value = { "/users", "/users/{userId}"})
+    public Object getUserS(@PathVariable(required = false) Integer userId) throws UserNotFoundException
+            , FriendNotFoundException {
+        if (userId == null) {
+            return userService.getAllUsers();
+        } else {
+            return userService.getUserById(userId);
+        }
     }
 
-    @GetMapping(value = { "/users", "/users/{userId}"})
-    //@ResponseStatus
-    public Object getFilmS(@PathVariable(required = false) Integer userId) throws FilmNotFoundException {
-        if (userId != null) {
-            return userService.getUserById(userId);
-        } else {
-            return userService.getAllUsers();
-        }
+    @PutMapping("/users")
+    public User update(@RequestBody @Valid User user) throws UserNotFoundException, FriendNotFoundException {
+        return userService.update(user);
     }
 }
