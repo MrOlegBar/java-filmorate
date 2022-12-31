@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate;
 
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -16,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @AutoConfigureTestDatabase
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
 class FilmControllerTests {
     final String URI_FILMS = "/films";
     @Autowired
@@ -37,8 +39,8 @@ class FilmControllerTests {
     public void contextLoads() {
     }
 
-    @Test
-    public void filmCreate() {
+    /*@Test
+    public void postFilm() {
         ResponseEntity<String> response = this.restTemplate.postForEntity(URI_FILMS, film, String.class);
 
         int actual1 = response.getStatusCodeValue();
@@ -52,7 +54,7 @@ class FilmControllerTests {
 
         assertEquals(actual1, 200);
         assertEquals(actual2, expected2);
-    }
+    }*/
 
     /*@Test
     void filmCreateFailName() {

@@ -30,10 +30,16 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler({UserNotFoundException.class, FilmNotFoundException.class, GenreNotFoundException.class,
-            RatingMpaNotFoundException.class, IncorrectParameterException.class, EmptyResultDataAccessException.class})
+            RatingMpaNotFoundException.class, IncorrectParameterException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleNotFound(final RuntimeException e) {
         return new ErrorResponse(e.getMessage());
+    }
+
+    @ExceptionHandler({EmptyResultDataAccessException.class})
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleIncorrectParameter() {
+        return new ErrorResponse("По такому индентификатору данные не найдены.");
     }
     @ExceptionHandler({DuplicateKeyException.class})
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

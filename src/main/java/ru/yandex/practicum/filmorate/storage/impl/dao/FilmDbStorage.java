@@ -123,7 +123,7 @@ public class FilmDbStorage implements FilmStorage {
 
             List<Genre> genres = new ArrayList<>(jdbcTemplate.query(sqlQueryForGenres, genreDbStorage::mapRowToGenre
                     , film.getId()));
-            if (genres.contains(null)) {
+            if (genres.contains(Genre.builder().id(0).name(null).build())) {
                 genres.clear();
             }
             film.setGenres(genres);

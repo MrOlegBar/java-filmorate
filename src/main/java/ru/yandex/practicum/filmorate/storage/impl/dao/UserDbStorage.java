@@ -64,8 +64,9 @@ public class UserDbStorage implements UserStorage {
     }
     @Override
     public User update(User user) throws UserNotFoundException, FriendNotFoundException {
+        getUserById(user.getId());
         if (user.getId() < 1) {
-            log.error("Пользователь с id = {}} не найден.", user.getId());
+            log.error("Пользователь с id = {} не найден.", user.getId());
             throw new UserNotFoundException(String.format("Пользователь с id = %s не найден.", user.getId()));
         }
 
