@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.storage.impl.dao;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -11,6 +12,7 @@ import ru.yandex.practicum.filmorate.model.film.Film;
 import java.util.Collection;
 
 @Repository
+@Getter
 @Slf4j
 public class LikeDbStorage {
     private final JdbcTemplate jdbcTemplate;
@@ -25,7 +27,7 @@ public class LikeDbStorage {
 
     public Collection<Film> getPopularFilms(Integer count) throws FilmNotFoundException {
         String sqlQuery = "SELECT * FROM FILMS_RATINGS_MPA_VIEW ORDER BY RATE DESC LIMIT ?";
-        return jdbcTemplate.query(sqlQuery, filmDbStorage::mapRowToFilm, count);
+        return jdbcTemplate.query(sqlQuery, filmDbStorage::getMapRowToFilm, count);
     }
 
     public Film addLike(int filmId, int userId) throws FilmNotFoundException, UserNotFoundException {
@@ -39,7 +41,7 @@ public class LikeDbStorage {
                 "WHERE FILM_ID = ?) WHERE FILM_ID = ?";
         jdbcTemplate.update(sqlQueryForAddLike, filmId, filmId);
         log.info("Добавлен лайк от пользователя с id = {} фильму с id = {}", userId, filmId);
-        return film;
+        return filmDbStorage.getFilmById(filmId);
     }
 
     public Film deleteLike(int filmId, int userId) throws UserNotFoundException, FilmNotFoundException

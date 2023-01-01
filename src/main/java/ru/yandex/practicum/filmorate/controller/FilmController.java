@@ -19,7 +19,7 @@ public class FilmController {
         if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
             throw new ValidationException("Дата релиза должны быть не раньше 28.12.1895 г.");
         }
-        return filmService.createFilm(film);
+        return filmService.create(film);
     }
 
     @GetMapping(value = { "/films", "/films/{filmId}"})
@@ -33,6 +33,6 @@ public class FilmController {
 
     @PutMapping("/films")
     public Film putFilm(@RequestBody @Valid Film film) throws FilmNotFoundException, UserNotFoundException {
-        return filmService.updateFilm(film);
+        return filmService.update(film);
     }
 }

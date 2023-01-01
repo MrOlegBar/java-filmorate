@@ -18,7 +18,7 @@ public class FriendController {
             , @PathVariable(required = false) Integer otherUserId) throws UserNotFoundException
             , FriendNotFoundException {
         if (otherUserId == null) {
-            return friendService.getFriends(userId);
+            return friendService.getAllFriends(userId);
         } else {
             return friendService.getCorporateFriends(userId, otherUserId);
         }

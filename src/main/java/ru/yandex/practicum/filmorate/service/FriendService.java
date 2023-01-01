@@ -14,8 +14,8 @@ import java.util.List;
 public class FriendService {
     private final FriendDbStorage friendDbStorage;
 
-    public List<User> getFriends(int userId) throws UserNotFoundException, FriendNotFoundException {
-        return friendDbStorage.getFriends(userId);
+    public List<User> getAllFriends(int userId) throws UserNotFoundException, FriendNotFoundException {
+        return friendDbStorage.getAllFriends(userId);
     }
 
     public List<User> getCorporateFriends(int userId, int otherUserId) throws UserNotFoundException

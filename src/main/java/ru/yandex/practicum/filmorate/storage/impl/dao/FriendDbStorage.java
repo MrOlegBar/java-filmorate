@@ -81,7 +81,7 @@ public class FriendDbStorage {
         throw new IncorrectParameterException("Пользователь отсутствует в списке друзей.");
     }
 
-    public List<User> getFriends(int userId) throws UserNotFoundException, FriendNotFoundException {
+    public List<User> getAllFriends(int userId) throws UserNotFoundException, FriendNotFoundException {
         userDbStorage.getUserById(userId);
 
         String sqlQueryForFriends = "SELECT * FROM USERS WHERE USER_ID IN (SELECT FRIEND_ID FROM USERS_FRIENDS " +

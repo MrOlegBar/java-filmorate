@@ -14,8 +14,8 @@ import java.util.Collection;
 public class FilmService {
     private final FilmStorage filmDbStorage;
 
-    public Film createFilm(Film film) throws FilmNotFoundException {
-        return filmDbStorage.createFilm(film);
+    public Film create(Film film) throws FilmNotFoundException {
+        return filmDbStorage.create(film);
     }
     public Collection<Film> getAllFilms() throws FilmNotFoundException {
         return filmDbStorage.getAllFilms();
@@ -25,7 +25,7 @@ public class FilmService {
         return filmDbStorage.getFilmById(filmId);
     }
 
-    public Film updateFilm(Film film) throws FilmNotFoundException, UserNotFoundException {
-        return filmDbStorage.updateFilm(film);
+    public Film update(Film film) throws FilmNotFoundException, UserNotFoundException {
+        return filmDbStorage.update(film);
     }
 }

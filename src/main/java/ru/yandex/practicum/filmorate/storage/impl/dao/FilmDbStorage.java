@@ -32,7 +32,7 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     @Override
-    public Film createFilm(Film film) throws FilmNotFoundException {
+    public Film create(Film film) throws FilmNotFoundException {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("films")
                 .usingGeneratedKeyColumns("film_id");
@@ -71,7 +71,7 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     @Override
-    public Film updateFilm(Film film) throws FilmNotFoundException, UserNotFoundException {
+    public Film update(Film film) throws FilmNotFoundException, UserNotFoundException {
         if (film.getId() < 1) {
             log.error("Фильм с id = {}} не найден.", film.getId());
             throw new FilmNotFoundException(String.format("Фильм с id = %s не найден.", film.getId()));
@@ -104,7 +104,10 @@ public class FilmDbStorage implements FilmStorage {
         return getFilmById(film.getId());
     }
 
-    public Film mapRowToFilm(ResultSet resultSet, int rowNum) throws SQLException, FilmNotFoundException {
+    public Film getMapRowToFilm(ResultSet resultSet, int rowNum) throws SQLException, FilmNotFoundException {
+        return mapRowToFilm(resultSet, rowNum);
+    }
+    private Film mapRowToFilm(ResultSet resultSet, int rowNum) throws SQLException, FilmNotFoundException {
         Film film = Film.builder()
                 .id(resultSet.getInt("film_id"))
                 .name(resultSet.getString("title"))

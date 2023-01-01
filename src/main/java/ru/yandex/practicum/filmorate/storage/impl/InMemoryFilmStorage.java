@@ -30,7 +30,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public Film createFilm(Film film) throws ValidationException {
+    public Film create(Film film) throws ValidationException {
         releaseDateCheck(film.getReleaseDate());
 
         save(film);
@@ -40,7 +40,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public Film updateFilm(Film film) throws FilmNotFoundException {
+    public Film update(Film film) throws FilmNotFoundException {
         releaseDateCheck(film.getReleaseDate());
 
         if (!films.containsKey(film.getId()) || film.getId() < 1) {
