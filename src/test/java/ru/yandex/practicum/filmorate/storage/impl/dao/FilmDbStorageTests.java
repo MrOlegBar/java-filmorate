@@ -24,27 +24,26 @@ public class FilmDbStorageTests {
 
     @Autowired
     @Qualifier("filmDbStorage")
-    FilmStorage filmStorage;
+    FilmStorage filmDbStorage;
 
     @Test
-    public void contextLoads() {
+    void contextLoads() {
     }
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
-    public void createFilm() {
+    void createFilm() {
         Film testFilm = Film.builder()
                 .name("name")
                 .description("description")
                 .releaseDate(LocalDate.parse("1967-03-25"))
                 .duration((short) 100)
-                .mpa(RatingMpa.builder()
-                        .id(1).build())
+                .mpa(RatingMpa.builder().id(1).build())
                 .rate(1)
                 .likes(new TreeSet<>())
                 .genres(new ArrayList<>())
                 .build();
 
-        Film foundFilm = filmStorage.create(testFilm);
+        Film foundFilm = filmDbStorage.create(testFilm);
         testFilm.setId(foundFilm.getId());
         testFilm.setMpa(RatingMpa.builder().id(1).name("G").build());
 
@@ -54,7 +53,7 @@ public class FilmDbStorageTests {
 
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
-    public void getAllFilms() {
+    void getAllFilms() {
         Film testFilm = Film.builder()
                 .name("name")
                 .description("description")
@@ -67,23 +66,23 @@ public class FilmDbStorageTests {
                 .genres(new ArrayList<>())
                 .build();
 
-        Film foundFilm = filmStorage.create(testFilm);
+        Film foundFilm = filmDbStorage.create(testFilm);
         testFilm.setId(foundFilm.getId());
         testFilm.setMpa(RatingMpa.builder().id(1).name("G").build());
 
-        Collection<Film> films = new ArrayList<>();
-        films.add(testFilm);
+        Collection<Film> testFilms = new ArrayList<>();
+        testFilms.add(testFilm);
 
-        Collection<Film> foundFilms = filmStorage.getAllFilms();
+        Collection<Film> foundFilms = filmDbStorage.getAllFilms();
 
         assertNotNull(foundFilms);
-        assertEquals(films, foundFilms);
+        assertEquals(testFilms, foundFilms);
     }
 
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
-    public void getFilmById() {
-        Film testFilm = Film.builder()
+    void getFilmById() {
+        Film film = Film.builder()
                 .name("name")
                 .description("description")
                 .releaseDate(LocalDate.parse("1967-03-25"))
@@ -95,21 +94,21 @@ public class FilmDbStorageTests {
                 .genres(new ArrayList<>())
                 .build();
 
-        Film createdFilm = filmStorage.create(testFilm);
+        Film testFilm = filmDbStorage.create(film);
 
-        testFilm.setId(createdFilm.getId());
-        testFilm.setMpa(RatingMpa.builder().id(1).name("G").build());
+        film.setId(testFilm.getId());
+        film.setMpa(RatingMpa.builder().id(1).name("G").build());
 
-        Film foundFilm = filmStorage.getFilmById(createdFilm.getId());
+        Film foundFilm = filmDbStorage.getFilmById(testFilm.getId());
 
         assertNotNull(foundFilm);
-        assertEquals(createdFilm, foundFilm);
+        assertEquals(testFilm, foundFilm);
     }
 
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
-    public void updateFilm() {
-        Film testFilm = Film.builder()
+    void updateFilm() {
+        Film film = Film.builder()
                 .name("name")
                 .description("description")
                 .releaseDate(LocalDate.parse("1967-03-25"))
@@ -121,9 +120,9 @@ public class FilmDbStorageTests {
                 .genres(new ArrayList<>())
                 .build();
 
-        Film createFilm = filmStorage.create(testFilm);
+        Film createFilm = filmDbStorage.create(film);
 
-        Film foundFilm = filmStorage.update(Film.builder()
+        Film foundFilm = filmDbStorage.update(Film.builder()
                 .id(createFilm.getId())
                 .name("New name")
                 .description("New description")
@@ -136,8 +135,9 @@ public class FilmDbStorageTests {
                 .genres(new ArrayList<>())
                 .build());
 
-        Film updateFilm = filmStorage.getFilmById(foundFilm.getId());
+        Film testFilm = filmDbStorage.getFilmById(foundFilm.getId());
+
         assertNotNull(foundFilm);
-        assertEquals(updateFilm, foundFilm);
+        assertEquals(testFilm, foundFilm);
     }
 }

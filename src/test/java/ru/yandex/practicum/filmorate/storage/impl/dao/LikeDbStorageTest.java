@@ -22,12 +22,20 @@ public class LikeDbStorageTest {
     LikeDbStorage likeDbStorage;
 
     @Test
-    public void contextLoads() {
+    void contextLoads() {
     }
 
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
-    public void addLike() {
+    void addLike() {
+        User testUser = likeDbStorage.getUserDbStorage().create(User.builder()
+                .login("login")
+                .name("name")
+                .email("email@mail.ru")
+                .birthday(LocalDate.parse("1967-03-25"))
+                .friends(new TreeMap<>())
+                .build());
+
         Film testFilm = likeDbStorage.getFilmDbStorage().create(Film.builder()
                 .name("name")
                 .description("description")
@@ -40,7 +48,21 @@ public class LikeDbStorageTest {
                 .genres(new ArrayList<>())
                 .build());
 
-        User testUser = likeDbStorage.getUserDbStorage().create(User.builder()
+        Film foundFilm = likeDbStorage.addLike(testFilm.getId(), testUser.getId());
+
+        Set<Integer> likes = testFilm.getLikes();
+        likes.add(testUser.getId());
+        testFilm.setLikes(likes);
+        testFilm.setRate(2);
+
+        assertNotNull(foundFilm);
+        assertEquals(testFilm, foundFilm);
+    }
+
+    @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    void getPopularFilms() {
+        User user = likeDbStorage.getUserDbStorage().create(User.builder()
                 .login("login")
                 .name("name")
                 .email("email@mail.ru")
@@ -48,12 +70,64 @@ public class LikeDbStorageTest {
                 .friends(new TreeMap<>())
                 .build());
 
-        Set<Integer> likes = testFilm.getLikes();
-        likes.add(testUser.getId());
-        testFilm.setLikes(likes);
-        testFilm.setRate(2);
+        Film film = likeDbStorage.getFilmDbStorage().create(Film.builder()
+                .name("name")
+                .description("description")
+                .releaseDate(LocalDate.parse("1967-03-25"))
+                .duration((short) 100)
+                .mpa(RatingMpa.builder()
+                        .id(1).build())
+                .rate(1)
+                .likes(new TreeSet<>())
+                .genres(new ArrayList<>())
+                .build());
 
-        Film foundFilm = likeDbStorage.addLike(testFilm.getId(), testUser.getId());
+        likeDbStorage.addLike(film.getId(), user.getId());
+        Collection<Film> foundFilms = likeDbStorage.getPopularFilms(10);
+
+        Set<Integer> likes = film.getLikes();
+        likes.add(user.getId());
+        film.setLikes(likes);
+        film.setRate(2);
+        
+        Collection<Film> testFilms = new ArrayList<>();
+        testFilms.add(film);
+
+        assertNotNull(foundFilms);
+        assertEquals(testFilms, foundFilms);
+    }
+
+    @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    void deleteLike() {
+        User user = likeDbStorage.getUserDbStorage().create(User.builder()
+                .login("login")
+                .name("name")
+                .email("email@mail.ru")
+                .birthday(LocalDate.parse("1967-03-25"))
+                .friends(new TreeMap<>())
+                .build());
+
+        Set<Integer> likes = new TreeSet<>();
+        likes.add(user.getId());
+
+        Film testFilm = likeDbStorage.getFilmDbStorage().create(Film.builder()
+                .name("name")
+                .description("description")
+                .releaseDate(LocalDate.parse("1967-03-25"))
+                .duration((short) 100)
+                .mpa(RatingMpa.builder()
+                        .id(1).build())
+                .rate(2)
+                .likes(likes)
+                .genres(new ArrayList<>())
+                .build());
+
+        Film foundFilm = likeDbStorage.deleteLike(testFilm.getId(), user.getId());
+
+        testFilm.setRate(1);
+        likes.clear();
+        testFilm.setLikes(likes);
 
         assertNotNull(foundFilm);
         assertEquals(testFilm, foundFilm);

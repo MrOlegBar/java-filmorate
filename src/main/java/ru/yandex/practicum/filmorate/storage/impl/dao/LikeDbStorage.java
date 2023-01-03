@@ -16,23 +16,25 @@ import java.util.Collection;
 @Slf4j
 public class LikeDbStorage {
     private final JdbcTemplate jdbcTemplate;
-    private final FilmDbStorage filmDbStorage;
+    private final MapRowToObject mapRowToObject;
     private final UserDbStorage userDbStorage;
+    private final FilmDbStorage filmDbStorage;
 
     public LikeDbStorage(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.filmDbStorage = new FilmDbStorage(jdbcTemplate);
+        this.mapRowToObject = new MapRowToObject(jdbcTemplate);
         this.userDbStorage = new UserDbStorage(jdbcTemplate);
+        this.filmDbStorage = new FilmDbStorage(jdbcTemplate);
     }
 
     public Collection<Film> getPopularFilms(Integer count) throws FilmNotFoundException {
         String sqlQuery = "SELECT * FROM FILMS_RATINGS_MPA_VIEW ORDER BY RATE DESC LIMIT ?";
-        return jdbcTemplate.query(sqlQuery, filmDbStorage::getMapRowToFilm, count);
+        return jdbcTemplate.query(sqlQuery, mapRowToObject::mapRowToFilm, count);
     }
 
     public Film addLike(int filmId, int userId) throws FilmNotFoundException, UserNotFoundException {
         userDbStorage.getUserById(userId);
-        Film film = filmDbStorage.getFilmById(filmId);
+        filmDbStorage.getFilmById(filmId);
 
         String sqlQuery = "INSERT INTO FILMS_LIKES VALUES (?, ?)";
         jdbcTemplate.update(sqlQuery, filmId, userId);
@@ -47,7 +49,7 @@ public class LikeDbStorage {
     public Film deleteLike(int filmId, int userId) throws UserNotFoundException, FilmNotFoundException
             , IncorrectParameterException {
         userDbStorage.getUserById(userId);
-        Film film = filmDbStorage.getFilmById(filmId);
+        filmDbStorage.getFilmById(filmId);
 
         String sqlQuery = "UPDATE FILMS SET RATE = RATE - (SELECT COUNT(USER_ID) FROM FILMS_LIKES " +
                 "WHERE FILM_ID = ?) WHERE FILM_ID = ?";
@@ -62,6 +64,6 @@ public class LikeDbStorage {
         } else {
             log.info("Удален лайк от пользователя с id = {} фильму с id = {}", userId, filmId);
         }
-        return film;
+        return filmDbStorage.getFilmById(filmId);
     }
 }

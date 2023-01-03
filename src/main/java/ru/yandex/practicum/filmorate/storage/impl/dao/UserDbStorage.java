@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.storage.impl.dao;
 
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -11,17 +10,20 @@ import ru.yandex.practicum.filmorate.exception.FriendNotFoundException;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.user.User;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.*;
 
 @Component("userDbStorage")
 @Repository
 @Slf4j
-@AllArgsConstructor
 public class UserDbStorage implements UserStorage {
 
     private final JdbcTemplate jdbcTemplate;
+    private final MapRowToObject mapRowToObject;
+
+    public UserDbStorage(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.mapRowToObject = new MapRowToObject(jdbcTemplate);
+    }
 
     @Override
     public User create(User user) throws UserNotFoundException, FriendNotFoundException {
@@ -55,12 +57,12 @@ public class UserDbStorage implements UserStorage {
     @Override
     public Collection<User> getAllUsers() throws UserNotFoundException, FriendNotFoundException {
         String sqlQuery = "SELECT * FROM USERS";
-        return jdbcTemplate.query(sqlQuery, this::mapRowToUser);
+        return jdbcTemplate.query(sqlQuery, mapRowToObject::mapRowToUser);
     }
     @Override
     public User getUserById(int userId) throws UserNotFoundException, FriendNotFoundException {
         String sqlQuery = "SELECT * FROM USERS WHERE USER_ID = ?";
-        return jdbcTemplate.queryForObject(sqlQuery, this::mapRowToUser, userId);
+        return jdbcTemplate.queryForObject(sqlQuery, mapRowToObject::mapRowToUser, userId);
     }
     @Override
     public User update(User user) throws UserNotFoundException, FriendNotFoundException {
@@ -94,7 +96,7 @@ public class UserDbStorage implements UserStorage {
 
     public void deleteFriendsByUserId(int userId) throws FriendNotFoundException {
         String sqlQuery = "SELECT * FROM USERS_FRIENDS WHERE USER_ID = ? AND FRIENDSHIP_STATUS IN (false, true)";
-        Set<Integer> friends = new TreeSet<>(jdbcTemplate.query(sqlQuery, UserDbStorage.this::mapRowToFriendId
+        Set<Integer> friends = new TreeSet<>(jdbcTemplate.query(sqlQuery, mapRowToObject::mapRowToFriendId
                 , userId));
 
         if (!friends.isEmpty()){
@@ -102,58 +104,5 @@ public class UserDbStorage implements UserStorage {
             jdbcTemplate.update(sqlQueryForDeleteFriends, userId);
         }
         log.info("Удалены друзья у пользователя с id = {}", userId);
-    }
-
-    public Integer mapRowToUserId(ResultSet resultSet) throws SQLException, UserNotFoundException {
-        int userId =  resultSet.getInt("user_id");
-        if (userId > 0) {
-            return userId;
-        } else {
-            log.error("Пользователь с id = {} не существует.", userId);
-            throw new UserNotFoundException(String.format("Пользователь с id = %s не существует.", userId));
-        }
-    }
-
-    public Integer mapRowToFriendId(ResultSet resultSet, int rowNumFalse) throws SQLException, FriendNotFoundException {
-        int friendId =  resultSet.getInt("friend_id");
-        if (friendId > 0) {
-            return friendId;
-        } else {
-            log.error("Друг с id = {} не существует.", friendId);
-            throw new FriendNotFoundException(String.format("Друг с id = %s не существует.", friendId));
-        }
-    }
-    public User mapRowToUser(ResultSet resultSet, int rowNum) throws SQLException, UserNotFoundException
-            , FriendNotFoundException {
-        User user = User.builder()
-                .id(resultSet.getInt("user_id"))
-                .login(resultSet.getString("login"))
-                .name(resultSet.getString("name"))
-                .email(resultSet.getString("email"))
-                .birthday(Objects.requireNonNull(resultSet.getDate("birthday")).toLocalDate())
-                .build();
-
-        if (user.getId() > 0) {
-            Map<Boolean, Set<Integer>> friends = new TreeMap<>();
-
-            String sqlQuery = "SELECT * FROM USERS_FRIENDS WHERE USER_ID = ? AND FRIENDSHIP_STATUS = false";
-            String sqlQueryForStatusTrue = "SELECT * FROM USERS_FRIENDS WHERE USER_ID = ? AND FRIENDSHIP_STATUS = true";
-
-            Set<Integer> friendsForStatusFalse = new TreeSet<>(jdbcTemplate.query(sqlQuery
-                    , UserDbStorage.this::mapRowToFriendId, user.getId()));
-
-            friends.put(false, friendsForStatusFalse);
-
-            Set<Integer> friendsForStatusTrue = new TreeSet<>(jdbcTemplate.query(sqlQueryForStatusTrue
-                    , UserDbStorage.this::mapRowToFriendId, user.getId()));
-
-            friends.put(true, friendsForStatusTrue);
-
-            user.setFriends(friends);
-        } else {
-            log.error("Пользователь с id = {} не найден.", user.getId());
-            throw new UserNotFoundException(String.format("Пользователь с id = %s не найден.", user.getId()));
-        }
-        return user;
     }
 }
