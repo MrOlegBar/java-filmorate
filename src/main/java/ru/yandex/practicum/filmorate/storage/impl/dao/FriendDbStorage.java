@@ -71,7 +71,6 @@ public class FriendDbStorage {
 
         String sqlQueryForFalse = "INSERT INTO USERS_FRIENDS VALUES (?, ?, false)";
         jdbcTemplate.update(sqlQueryForFalse, userId, friendId);
-        jdbcTemplate.update(sqlQueryForFalse, friendId, userId);
         log.info("Добавлен друг с id = {} пользователю с id = {}", friendId, userId);
         return userDbStorage.getUserById(userId);
     }
