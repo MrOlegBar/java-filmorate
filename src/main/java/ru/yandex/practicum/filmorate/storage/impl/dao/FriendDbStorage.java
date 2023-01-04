@@ -50,18 +50,21 @@ public class FriendDbStorage {
 
     public User addFriend(int userId, int friendId) throws UserNotFoundException, FriendNotFoundException
             , IncorrectParameterException {
-        userDbStorage.getUserById(friendId);
         User user = userDbStorage.getUserById(userId);
+        User friend = userDbStorage.getUserById(friendId);
 
-        Map<Boolean, Set<Integer>> friends = user.getFriends();
-        Set<Integer> friendsFalse = friends.get(false);
-        Set<Integer> friendsTrue = friends.get(true);
+        Map<Boolean, Set<Integer>> userFriends = user.getFriends();
+        Set<Integer> userFriendsFalse = userFriends.get(false);
+        Set<Integer> userFriendsTrue = userFriends.get(true);
 
-        if(friendsTrue.contains(friendId)) {
+        Map<Boolean, Set<Integer>> friendFriends = friend.getFriends();
+        Set<Integer> friendFriendsFalse = friendFriends.get(false);
+        Set<Integer> friendFriendsTrue = friendFriends.get(true);
+
+        if(friendFriendsTrue.contains(userId) || userFriendsTrue.contains(friendId)) {
             throw new IncorrectParameterException("Пользователь уже добавлен в друзья.");
         }
-
-        if (friendsFalse.contains(friendId)) {
+        if (friendFriendsFalse.contains(userId) || userFriendsFalse.contains(friendId)) {
             String sqlQueryForTrue = "MERGE INTO USERS_FRIENDS KEY(USER_ID, FRIEND_ID) VALUES (?, ?, true)";
             jdbcTemplate.update(sqlQueryForTrue, userId, friendId);
             jdbcTemplate.update(sqlQueryForTrue, friendId, userId);

@@ -83,12 +83,6 @@ class FriendDbStorageTest {
 
         friendDbStorage.addFriend(testUser.getId(), testFriend.getId());
 
-        Map<Boolean, Set<Integer>> friendFriends = testFriend.getFriends();
-        Set<Integer> falseFriendFriends = friendFriends.get(false);
-        falseFriendFriends.add(testUser.getId());
-        friendFriends.put(false, falseFriendFriends);
-        testFriend.setFriends(friendFriends);
-
         Collection<User> foundUserFriends = friendDbStorage.getAllFriends(testUser.getId());
         Collection<User> testUserFriends = new ArrayList<>();
         testUserFriends.add(testFriend);
