@@ -115,10 +115,87 @@ class FriendDbStorageTest {
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void getCorporateFriends() {
+        User testUser = friendDbStorage.getUserDbStorage().create(User.builder()
+                .login("login")
+                .name("name")
+                .email("email@mail.ru")
+                .birthday(LocalDate.parse("1967-03-25"))
+                .friends(new TreeMap<>())
+                .build());
+
+        User testFriend = friendDbStorage.getUserDbStorage().create(User.builder()
+                .login("testFriend login")
+                .name("testFriend name")
+                .email("friendemail@mail.ru")
+                .birthday(LocalDate.parse("1967-10-25"))
+                .build());
+
+        User testCommonFriend = friendDbStorage.getUserDbStorage().create(User.builder()
+                .login("commonFriend login")
+                .name("commonFriend name")
+                .email("commonfriendemail@mail.ru")
+                .birthday(LocalDate.parse("1967-07-25"))
+                .build());
+
+        friendDbStorage.addFriend(testUser.getId(), testCommonFriend.getId());
+        friendDbStorage.addFriend(testCommonFriend.getId(), testUser.getId());
+        friendDbStorage.addFriend(testFriend.getId(), testCommonFriend.getId());
+        friendDbStorage.addFriend(testCommonFriend.getId(), testFriend.getId());
+
+        Collection<User> foundCommonFriends = friendDbStorage.getCorporateFriends(testUser.getId(),testFriend.getId());
+
+        Map<Boolean, Set<Integer>> commonFriendFriends = testCommonFriend.getFriends();
+        Set<Integer> trueCommonFriendFriends = commonFriendFriends.get(true);
+        trueCommonFriendFriends.add(testUser.getId());
+        trueCommonFriendFriends.add(testFriend.getId());
+        commonFriendFriends.put(true, trueCommonFriendFriends);
+        testCommonFriend.setFriends(commonFriendFriends);
+
+        Collection<User> testCommonFriends = new ArrayList<>();
+        testCommonFriends.add(testCommonFriend);
+
+        assertNotNull(foundCommonFriends);
+        assertEquals(testCommonFriends, foundCommonFriends);
     }
 
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void deleteFriend() {
+        User user = friendDbStorage.getUserDbStorage().create(User.builder()
+                .login("login")
+                .name("name")
+                .email("email@mail.ru")
+                .birthday(LocalDate.parse("1967-03-25"))
+                .friends(new TreeMap<>())
+                .build());
+
+        User friend = friendDbStorage.getUserDbStorage().create(User.builder()
+                .login("friend login")
+                .name("friend name")
+                .email("friendemail@mail.ru")
+                .birthday(LocalDate.parse("1967-10-25"))
+                .build());
+
+        friendDbStorage.addFriend(user.getId(), friend.getId());
+        friendDbStorage.addFriend(friend.getId(), user.getId());
+        User testFriend = friendDbStorage.deleteFriend(friend.getId(), user.getId());
+
+        Map<Boolean, Set<Integer>> friendFriends = friend.getFriends();
+        Set<Integer> falseFriendFriends = friendFriends.get(false);
+        falseFriendFriends.add(user.getId());
+        friendFriends.put(false, falseFriendFriends);
+        friend.setFriends(friendFriends);
+
+        assertNotNull(testFriend);
+        assertEquals(friend, testFriend);
+
+        User testUser = friendDbStorage.deleteFriend(user.getId(), friend.getId());
+
+        falseFriendFriends.clear();
+        friendFriends.put(false, falseFriendFriends);
+        user.setFriends(friendFriends);
+
+        assertNotNull(testUser);
+        assertEquals(user, testUser);
     }
 }
