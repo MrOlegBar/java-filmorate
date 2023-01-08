@@ -1,0 +1,8 @@
+INSERT INTO FILMS_LIKES
+VALUES (?, ?);
+
+UPDATE FILMS
+SET RATE = RATE + (SELECT COUNT(USER_ID)
+                   FROM FILMS_LIKES
+                   WHERE FILM_ID = ?)
+WHERE FILM_ID = ?;
