@@ -21,11 +21,11 @@ public class GenreDbStorage {
 
     public Collection<Genre> getAllGenres() throws GenreNotFoundException {
         String sqlQuery = "SELECT * FROM GENRES ORDER BY GENRE_ID";
-        return jdbcTemplate.query(sqlQuery, mapRowToObject::mapRowToGenre);
+        return jdbcTemplate.query(sqlQuery, (resultSet, rowNum) -> mapRowToObject.mapRowToGenre(resultSet));
     }
 
     public Genre getGenreById(int genreId) throws GenreNotFoundException {
         String sqlQuery = "SELECT * FROM GENRES WHERE GENRE_ID = ?";
-        return jdbcTemplate.queryForObject(sqlQuery, mapRowToObject::mapRowToGenre, genreId);
+        return jdbcTemplate.queryForObject(sqlQuery, (resultSet, rowNum) -> mapRowToObject.mapRowToGenre(resultSet), genreId);
     }
 }

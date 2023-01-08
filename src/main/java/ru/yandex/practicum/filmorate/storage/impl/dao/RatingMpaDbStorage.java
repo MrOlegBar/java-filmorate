@@ -21,11 +21,11 @@ public class RatingMpaDbStorage {
 
     public Collection<RatingMpa> getAllRatingsMpa() throws RatingMpaNotFoundException {
         String sqlQuery = "SELECT * FROM RATINGS_MPA ORDER BY RATING_MPA_ID";
-        return jdbcTemplate.query(sqlQuery, mapRowToObject::mapRowToRatingMpa);
+        return jdbcTemplate.query(sqlQuery, (resultSet, rowNum) -> mapRowToObject.mapRowToRatingMpa(resultSet));
     }
 
     public RatingMpa getRatingMpaById(int ratingMpaId) throws RatingMpaNotFoundException {
         String sqlQuery = "SELECT * FROM RATINGS_MPA WHERE RATING_MPA_ID = ?";
-        return jdbcTemplate.queryForObject(sqlQuery, mapRowToObject::mapRowToRatingMpa, ratingMpaId);
+        return jdbcTemplate.queryForObject(sqlQuery, (resultSet, rowNum) -> mapRowToObject.mapRowToRatingMpa(resultSet), ratingMpaId);
     }
 }

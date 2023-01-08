@@ -19,7 +19,7 @@ public class Film {
     @NotBlank(message = "Название фильма отсутствует.")
     private String name;
     @Size(max = 200, message = "Количество символов в описании фильма > 200")
-    @NotNull
+    @NotNull(message = "Описание отсутствует.")
     private String description;
     @NotNull(message = "Дата выхода фильма отсутствует.")
     @JsonFormat(pattern = "yyyy-MM-dd")

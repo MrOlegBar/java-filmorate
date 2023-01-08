@@ -29,7 +29,7 @@ public class LikeDbStorage {
 
     public Collection<Film> getPopularFilms(Integer count) throws FilmNotFoundException {
         String sqlQuery = "SELECT * FROM FILMS_RATINGS_MPA_VIEW ORDER BY RATE DESC LIMIT ?";
-        return jdbcTemplate.query(sqlQuery, mapRowToObject::mapRowToFilm, count);
+        return jdbcTemplate.query(sqlQuery, (resultSet, rowNum) -> mapRowToObject.mapRowToFilm(resultSet), count);
     }
 
     public Film addLike(int filmId, int userId) throws FilmNotFoundException, UserNotFoundException {

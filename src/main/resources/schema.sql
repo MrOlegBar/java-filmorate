@@ -48,20 +48,20 @@ CREATE TABLE IF NOT EXISTS users_friends (
 
 CREATE OR REPLACE VIEW FILMS_RATINGS_MPA_VIEW AS
 SELECT f.film_id,
-       f.TITLE,
-       f.DESCRIPTION,
-       f.RELEASE_DATE,
-       f.DURATION,
-       f.RATING_MPA_ID,
-       rm.RATING_MPA,
+       f.title,
+       f.description,
+       f.release_date,
+       f.duration,
+       f.rating_MPA_id,
+       rm.rating_MPA,
        f.rate
-FROM FILMS f
-LEFT OUTER JOIN RATINGS_MPA rm ON f.RATING_MPA_ID = rm.RATING_MPA_ID;
+FROM films f
+LEFT OUTER JOIN ratings_MPA rm ON f.rating_MPA_id = rm.rating_MPA_id;
 
 CREATE OR REPLACE VIEW FILMS_GENRES_VIEW AS
 SELECT f.film_id,
        g.genre_id,
        g.genre
-FROM FILMS f
-         LEFT OUTER JOIN films_genres fg on f.FILM_ID = fg.FILM_ID
-         LEFT OUTER JOIN GENRES g on g.GENRE_ID = fg.GENRE_ID;
+FROM films f
+         LEFT OUTER JOIN films_genres fg on f.film_id = fg.film_id
+         LEFT OUTER JOIN genres g on g.genre_id = fg.genre_id;

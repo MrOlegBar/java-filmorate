@@ -27,9 +27,6 @@ public class FilmDbStorageTests {
     FilmStorage filmDbStorage;
 
     @Test
-    void contextLoads() {
-    }
-    @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void createFilm() {
         Film testFilm = Film.builder()

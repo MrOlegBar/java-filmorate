@@ -21,10 +21,6 @@ public class GenreDbStorageTest {
     GenreDbStorage genreDbStorage;
 
     @Test
-    void contextLoads() {
-    }
-
-    @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void getAllGenres() {
         Collection<Genre> testGenres = new ArrayList<>();

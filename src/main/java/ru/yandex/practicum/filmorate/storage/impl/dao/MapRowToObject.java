@@ -21,8 +21,8 @@ public class MapRowToObject {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Film mapRowToFilm(ResultSet resultSet, int rowNum) throws SQLException, FilmNotFoundException {
-        Film film = Film.builder()
+    public Film mapRowToFilm(ResultSet resultSet) throws SQLException, FilmNotFoundException {
+        return Film.builder()
                 .id(resultSet.getInt("film_id"))
                 .name(resultSet.getString("title"))
                 .description(resultSet.getString("description"))
@@ -33,30 +33,11 @@ public class MapRowToObject {
                         .name(resultSet.getString("rating_MPA"))
                         .build())
                 .rate(resultSet.getInt("rate"))
+                .genres(getGenres(resultSet.getInt("film_id")))
+                .likes(getLikes(resultSet.getInt("film_id")))
                 .build();
-
-        if (film.getId() > 0) {
-            String sqlQueryForGenres = "SELECT * FROM FILMS_GENRES_VIEW WHERE FILM_ID = ?";
-
-            List<Genre> genres = new ArrayList<>(jdbcTemplate.query(sqlQueryForGenres, MapRowToObject.this::mapRowToGenre
-                    , film.getId()));
-            if (genres.contains(Genre.builder().id(0).name(null).build())) {
-                genres.clear();
-            }
-            film.setGenres(genres);
-
-            String sqlQueryForLikes = "SELECT * FROM FILMS_LIKES WHERE FILM_ID = ?";
-
-            Set<Integer> likes = new TreeSet<>(jdbcTemplate.query(sqlQueryForLikes, (resultSetLikes, rowNumLikes)
-                    -> MapRowToObject.this.mapRowToUserId(resultSetLikes), film.getId()));
-            film.setLikes(likes);
-        } else {
-            log.error("Фильм с id = {} не найден.", film.getId());
-            throw new FilmNotFoundException(String.format("Фильм с id = %s не найден.", film.getId()));
-        }
-        return film;
     }
-    public Genre mapRowToGenre(ResultSet resultSet, int rowNum) throws SQLException, GenreNotFoundException {
+    public Genre mapRowToGenre(ResultSet resultSet) throws SQLException, GenreNotFoundException {
         Genre genre;
         int genreId = resultSet.getInt("genre_id");
 
@@ -80,7 +61,7 @@ public class MapRowToObject {
             throw new UserNotFoundException(String.format("Пользователь с id = %s не существует.", userId));
         }
     }
-    public Integer mapRowToFriendId(ResultSet resultSet, int rowNumFalse) throws SQLException, FriendNotFoundException {
+    public Integer mapRowToFriendId(ResultSet resultSet) throws SQLException, FriendNotFoundException {
         int friendId =  resultSet.getInt("friend_id");
         if (friendId > 0) {
             return friendId;
@@ -89,7 +70,7 @@ public class MapRowToObject {
             throw new FriendNotFoundException(String.format("Друг с id = %s не существует.", friendId));
         }
     }
-    public User mapRowToUser(ResultSet resultSet, int rowNum) throws SQLException, UserNotFoundException
+    public User mapRowToUser(ResultSet resultSet) throws SQLException, UserNotFoundException
             , FriendNotFoundException {
         User user = User.builder()
                 .id(resultSet.getInt("user_id"))
@@ -106,12 +87,12 @@ public class MapRowToObject {
             String sqlQueryForStatusTrue = "SELECT * FROM USERS_FRIENDS WHERE USER_ID = ? AND FRIENDSHIP_STATUS = true";
 
             Set<Integer> friendsForStatusFalse = new TreeSet<>(jdbcTemplate.query(sqlQuery
-                    , MapRowToObject.this::mapRowToFriendId, user.getId()));
+                    , (resultSet1, rowNumFalse) -> MapRowToObject.this.mapRowToFriendId(resultSet1), user.getId()));
 
             friends.put(false, friendsForStatusFalse);
 
             Set<Integer> friendsForStatusTrue = new TreeSet<>(jdbcTemplate.query(sqlQueryForStatusTrue
-                    , MapRowToObject.this::mapRowToFriendId, user.getId()));
+                    , (resultSet1, rowNumFalse) -> MapRowToObject.this.mapRowToFriendId(resultSet1), user.getId()));
 
             friends.put(true, friendsForStatusTrue);
 
@@ -122,7 +103,7 @@ public class MapRowToObject {
         }
         return user;
     }
-    public RatingMpa mapRowToRatingMpa(ResultSet resultSet, int rowNum) throws SQLException
+    public RatingMpa mapRowToRatingMpa(ResultSet resultSet) throws SQLException
             , RatingMpaNotFoundException {
         RatingMpa ratingMpa;
         int ratingMpaId = resultSet.getInt("rating_mpa_id");
@@ -137,5 +118,35 @@ public class MapRowToObject {
             throw new RatingMpaNotFoundException(String.format("Рейтинг фильма с id = %s не существует.", ratingMpaId));
         }
         return ratingMpa;
+    }
+    private List<Genre> getGenres (int filmId) {
+        if (filmId > 0) {
+            String sqlQueryForGenres = "SELECT * FROM FILMS_GENRES_VIEW WHERE FILM_ID = ?";
+
+            List<Genre> genres = new ArrayList<>(jdbcTemplate.query(sqlQueryForGenres
+                    , (resultSet1, rowNum) -> MapRowToObject.this.mapRowToGenre(resultSet1), filmId));
+
+            if (genres.contains(Genre.builder().id(0).name(null).build())) {
+                genres.clear();
+            }
+
+            return genres;
+        } else {
+            log.error("Фильм с id = {} не найден.", filmId);
+            throw new FilmNotFoundException(String.format("Фильм с id = %s не найден.", filmId));
+        }
+    }
+
+    private Set<Integer> getLikes(int filmId) {
+        if (filmId > 0) {
+
+            String sqlQueryForLikes = "SELECT * FROM FILMS_LIKES WHERE FILM_ID = ?";
+
+            return new TreeSet<>(jdbcTemplate.query(sqlQueryForLikes, (resultSetLikes, rowNumLikes)
+                    -> this.mapRowToUserId(resultSetLikes), filmId));
+        } else {
+            log.error("Фильм с id = {} не найден.", filmId);
+            throw new FilmNotFoundException(String.format("Фильм с id = %s не найден.", filmId));
+        }
     }
 }

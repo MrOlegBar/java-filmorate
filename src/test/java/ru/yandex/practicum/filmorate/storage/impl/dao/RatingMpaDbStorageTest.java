@@ -20,10 +20,6 @@ public class RatingMpaDbStorageTest {
     RatingMpaDbStorage ratingMpaDbStorage;
 
     @Test
-    void contextLoads() {
-    }
-
-    @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void getAllRatingsMpa() {
         Collection<RatingMpa> testRatingsMpa = new ArrayList<>();

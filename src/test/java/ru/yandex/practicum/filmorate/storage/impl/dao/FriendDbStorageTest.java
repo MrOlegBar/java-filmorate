@@ -19,10 +19,6 @@ class FriendDbStorageTest {
     FriendDbStorage friendDbStorage;
 
     @Test
-    void contextLoads() {
-    }
-
-    @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void addFriend() {
         User testUser = friendDbStorage.getUserDbStorage().create(User.builder()

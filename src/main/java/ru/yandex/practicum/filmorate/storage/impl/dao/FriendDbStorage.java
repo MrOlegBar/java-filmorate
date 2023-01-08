@@ -33,7 +33,7 @@ public class FriendDbStorage {
         String sqlQueryForFriends = "SELECT * FROM USERS WHERE USER_ID IN (SELECT FRIEND_ID FROM USERS_FRIENDS " +
                 "WHERE USER_ID = ?)";
 
-        return jdbcTemplate.query(sqlQueryForFriends, mapRowToObject::mapRowToUser, userId);
+        return jdbcTemplate.query(sqlQueryForFriends, (resultSet, rowNum) -> mapRowToObject.mapRowToUser(resultSet), userId);
     }
 
     public List<User> getCorporateFriends(int userId, int otherUserId) throws UserNotFoundException
@@ -45,7 +45,7 @@ public class FriendDbStorage {
                 "FRIEND_ID FROM USERS_FRIENDS WHERE USER_ID = ?) WHERE FRIEND_ID IN (SELECT FRIEND_ID " +
                 "FROM USERS_FRIENDS WHERE USER_ID = ?))";
 
-        return jdbcTemplate.query(sqlQueryForFriends, mapRowToObject::mapRowToUser, userId, otherUserId);
+        return jdbcTemplate.query(sqlQueryForFriends, (resultSet, rowNum) -> mapRowToObject.mapRowToUser(resultSet), userId, otherUserId);
     }
 
     public User addFriend(int userId, int friendId) throws UserNotFoundException, FriendNotFoundException

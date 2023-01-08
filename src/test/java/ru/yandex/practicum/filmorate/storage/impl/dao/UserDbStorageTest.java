@@ -22,10 +22,6 @@ class UserDbStorageTest {
     UserStorage userDbStorage;
 
     @Test
-    void contextLoads() {
-    }
-
-    @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void create() {
         Map<Boolean, Set<Integer>> friends = new TreeMap<>();

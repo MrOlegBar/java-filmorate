@@ -22,10 +22,6 @@ public class LikeDbStorageTest {
     LikeDbStorage likeDbStorage;
 
     @Test
-    void contextLoads() {
-    }
-
-    @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void addLike() {
         User testUser = likeDbStorage.getUserDbStorage().create(User.builder()

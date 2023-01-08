@@ -12,10 +12,14 @@ import java.util.*;
 public class User {
     @Digits(integer = 2_147_483_647, fraction = 0)
     private int id;
-    @Pattern(regexp = "\\S*", message = "Логин пользователя не должен содержать пустой символ.") private String login;
+    @Pattern(regexp = "\\S*", message = "Логин пользователя не должен содержать пустой символ.")
+    private String login;
     private String name;
-    @NotNull @Email(message = "Email не соответствует формату электронной почты.") private String email;
-    @NotNull @PastOrPresent(message = "Дата рождения еще не существует.")
+    @NotNull(message = "Электронная почта отсутствует.")
+    @Email(message = "Email не соответствует формату электронной почты.")
+    private String email;
+    @NotNull(message = "Дата рождения отсутствует.")
+    @PastOrPresent(message = "Дата рождения еще не существует.")
     private LocalDate birthday;
     private Map<Boolean, Set<Integer>> friends;
 

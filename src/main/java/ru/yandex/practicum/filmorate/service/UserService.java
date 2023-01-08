@@ -12,7 +12,7 @@ import java.util.Collection;
 @Service
 @AllArgsConstructor
 public class UserService {
-    private final UserStorage userDbStorage;
+    private UserStorage userDbStorage;
 
     public User create(User user) throws UserNotFoundException, FriendNotFoundException {
         return userDbStorage.create(user);
