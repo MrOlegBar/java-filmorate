@@ -25,14 +25,14 @@ public class FriendController {
     }
 
     @PutMapping("/users/{userId}/friends/{friendId}")
-    public User putFriend(@PathVariable("userId") int userId, @PathVariable("friendId") int friendId)
+    public User putFriend(@PathVariable int userId, @PathVariable int friendId)
             throws UserNotFoundException {
         return friendService.addFriend(userId, friendId);
     }
 
     @DeleteMapping("/users/{userId}/friends/{friendId}")
-    public User deleteFriend(@PathVariable("userId") int userId
-            , @PathVariable("friendId") int friendId) throws UserNotFoundException, FriendNotFoundException {
+    public User deleteFriend(@PathVariable int userId, @PathVariable int friendId) throws UserNotFoundException
+            , FriendNotFoundException {
         return friendService.deleteFriend(userId, friendId);
     }
 }

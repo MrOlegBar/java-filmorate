@@ -16,7 +16,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/users")
-    public User postUser(@RequestBody @Valid User user) throws UserNotFoundException, FriendNotFoundException {
+    public User postUser(@Valid @RequestBody User user) throws UserNotFoundException, FriendNotFoundException {
         return userService.create(user);
     }
 
@@ -31,7 +31,7 @@ public class UserController {
     }
 
     @PutMapping("/users")
-    public User update(@RequestBody @Valid User user) throws UserNotFoundException, FriendNotFoundException {
+    public User update(@Valid @RequestBody User user) throws UserNotFoundException, FriendNotFoundException {
         return userService.update(user);
     }
 }

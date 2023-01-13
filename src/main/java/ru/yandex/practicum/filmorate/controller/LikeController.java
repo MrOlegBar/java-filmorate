@@ -19,19 +19,19 @@ public class LikeController {
     public Collection<Film> getPopularFilms(@RequestParam(defaultValue = "10") Integer count)
             throws FilmNotFoundException {
         if (count <= 0) {
-            throw new IncorrectParameterException(String.format("Параметр метода должен быть > 0,count=%s", count));
+            throw new IncorrectParameterException(String.format("Параметр метода должен быть > 0, count = %s", count));
         }
         return likeService.getPopularFilms(count);
     }
 
     @PutMapping("/films/{filmId}/like/{userId}")
-    public Film putLike(@PathVariable("filmId") int filmId, @PathVariable("userId") int userId)
+    public Film putLike(@PathVariable int filmId, @PathVariable int userId)
             throws FilmNotFoundException, UserNotFoundException {
         return likeService.addLike(filmId, userId);
     }
 
     @DeleteMapping("/films/{filmId}/like/{userId}")
-    public Film deleteLike(@PathVariable("filmId") int filmId, @PathVariable("userId") int userId)
+    public Film deleteLike(@PathVariable int filmId, @PathVariable int userId)
             throws UserNotFoundException, FilmNotFoundException, IncorrectParameterException {
         return likeService.deleteLike(filmId, userId);
     }
