@@ -1,78 +1,37 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import lombok.extern.slf4j.Slf4j;
+import lombok.AllArgsConstructor;
+
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
-import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.exception.FriendNotFoundException;
+import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
+import ru.yandex.practicum.filmorate.model.user.User;
+import ru.yandex.practicum.filmorate.service.UserService;
 
 import javax.validation.Valid;
-import java.util.*;
 
 @RestController
-@Slf4j
-@RequestMapping("/users")
+@AllArgsConstructor
 public class UserController {
+    private final UserService userService;
 
-    private final Map<String, User> users = new TreeMap<>();
-
-    @GetMapping
-    public Collection<User> findAll() {
-        return users.values();
+    @PostMapping("/users")
+    public User postUser(@Valid @RequestBody User user) throws UserNotFoundException, FriendNotFoundException {
+        return userService.create(user);
     }
 
-    @PostMapping
-    public User create(@RequestBody @Valid User user) {
-        if (user.getName().isBlank()) {
-            user.setName(user.getLogin());
+    @GetMapping(value = { "/users", "/users/{userId}"})
+    public Object getUserS(@PathVariable(required = false) Integer userId) throws UserNotFoundException
+            , FriendNotFoundException {
+        if (userId == null) {
+            return userService.getAllUsers();
+        } else {
+            return userService.getUserById(userId);
         }
-
-        users.put(user.getEmail(), user);
-
-        log.debug("Пользователь: {} сохранен.", user);
-        return user;
     }
 
-    @PutMapping
-    public User update(@RequestBody @Valid User user) throws ValidationException {
-        for (String email : users.keySet()) {
-            User oldUser = users.get(email);
-            if ((user.getId() == oldUser.getId()) && (!user.getEmail().equals(oldUser.getEmail()))) {
-                users.remove(email, oldUser);
-                users.put(user.getEmail(), user);
-            }
-
-            if (user.getId() != oldUser.getId() || users.isEmpty() || user.getId() < 1){
-                ValidationException e = new ValidationException("User с id = " + user.getId() + " не существует");
-                log.debug("Валидация не пройдена", e);
-                throw e;
-            }
-        }
-
-        if (user.getName().isBlank()) {
-            user.setName(user.getLogin());
-        }
-
-        users.put(user.getEmail(), user);
-
-        log.debug("Пользователь: {} сохранен.", user);
-        return user;
-    }
-
-    public int getIdGeneration() {
-        return idGeneration();
-    }
-
-    private int idGeneration() {
-        int id = 1;
-
-        for (String email : users.keySet()) {
-            User oldUser = users.get(email);
-            int idUser = oldUser.getId();
-
-            if (id == idUser) {
-                id++;
-            }
-        }
-        return id;
+    @PutMapping("/users")
+    public User update(@Valid @RequestBody User user) throws UserNotFoundException, FriendNotFoundException {
+        return userService.update(user);
     }
 }

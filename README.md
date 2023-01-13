@@ -1,2 +1,26 @@
-# java-filmorate
-Template repository for Filmorate project.
+#### [Схема БД](https://app.quickdatabasediagrams.com/#/d/P3E3M5)
+
+![data base diagram](src/main/images/Data Base Diagram.png)
+#### [- Файл для создания таблиц schema.sql](src/main/resources/schema.sql)
+#### [- Файл для заполнения таблиц data.sql](src/main/resources/data.sql)
+
+### *Примеры SQL запросов для эндпоинтов:*
+#### [1. @PostMapping("/films")](src/main/resources/sql%20scripts/1%20@PostMapping(":films").sql)
+#### [2. @GetMapping("/films")](src/main/resources/sql%20scripts/2%20@GetMapping(":films").sql)
+#### [3. @GetMapping("/films/{filmId}")](src/main/resources/sql%20scripts/3%20@GetMapping(":films:{filmId}").sql)
+#### [4. @PutMapping("/films")](src/main/resources/sql%20scripts/4%20@PutMapping(":films").sql)
+#### [5. @GetMapping("/films/popular?count={countFilms}")](src/main/resources/sql%20scripts/5%20@GetMapping(":films:popular|count={countFilms}").sql)
+#### [6. @PutMapping("/films/{filmId}/like/{userId}")](src/main/resources/sql%20scripts/6%20@PutMapping(":films:{filmId}:like:{userId}").sql)
+#### [7. @DeleteMapping("/films/{filmId}/like/{userId}")](src/main/resources/sql%20scripts/7%20@DeleteMapping(":films:{filmId}:like:{userId}").sql)
+#### [8. @GetMapping("/mpa")](src/main/resources/sql%20scripts/8%20@GetMapping(":mpa").sql)
+#### [9. @GetMapping("/mpa/{ratingMpaId}")](src/main/resources/sql%20scripts/9%20@GetMapping(":mpa:{ratingMpaId}").sql)
+#### [10. @GetMapping("/genres")](src/main/resources/sql%20scripts/10%20@GetMapping(":genres").sql)
+#### [11. @GetMapping("/genres/{genreId}")](src/main/resources/sql%20scripts/11%20@GetMapping(":genres:{genreId}").sql)
+#### [12. @PostMapping("/users")](src/main/resources/sql%20scripts/12%20@PostMapping(":users").sql)
+#### [13 @GetMapping("/users")](src/main/resources/sql%20scripts/13%20@GetMapping(":users").sql)
+#### [14. @GetMapping("/users/{userId}")](src/main/resources/sql%20scripts/14%20@GetMapping(":users:{userId}").sql)
+#### [15 @PutMapping("/users")](src/main/resources/sql%20scripts/15%20@PutMapping(":users").sql)
+#### [16. @GetMapping("/users/{userId}/friends")](src/main/resources/sql%20scripts/16%20@GetMapping(":users:{userId}:friends").sql)
+#### [17. @GetMapping("/users/{userId}/friends/common/{otherUserId}")](src/main/resources/sql%20scripts/17%20@GetMapping(":users:{userId}:friends:common:{otherUserId}").sql)
+#### [18. @PutMapping("/users/{userId}/friends/{friendId}")](src/main/resources/sql%20scripts/18%20@PutMapping(":users:{userId}:friends:{friendId}").sql)
+#### [19. @DeleteMapping("/users/{userId}/friends/{friendId}")](src/main/resources/sql%20scripts/19%20@DeleteMapping(":users:{userId}:friends:{friendId}").sql)
