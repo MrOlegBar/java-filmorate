@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.storage.impl.dao;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import ru.yandex.practicum.filmorate.exception.*;
@@ -13,13 +14,10 @@ import java.sql.SQLException;
 import java.util.*;
 
 @Slf4j
+@AllArgsConstructor
 public class MapRowToObject {
 
     private final JdbcTemplate jdbcTemplate;
-
-    public MapRowToObject(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
     public Film mapRowToFilm(ResultSet resultSet) throws SQLException, FilmNotFoundException {
         return Film.builder()
