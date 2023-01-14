@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS users_friends (
     PRIMARY KEY (user_id, friend_id)
 );
 
-CREATE OR REPLACE VIEW FILMS_RATINGS_MPA_VIEW AS
+CREATE OR REPLACE VIEW films_ratings_mpa_view AS
 SELECT f.film_id,
        f.title,
        f.description,
@@ -58,7 +58,7 @@ SELECT f.film_id,
 FROM films f
 LEFT OUTER JOIN ratings_MPA rm ON f.rating_MPA_id = rm.rating_MPA_id;
 
-CREATE OR REPLACE VIEW FILMS_GENRES_VIEW AS
+CREATE OR REPLACE VIEW films_genres_view AS
 SELECT f.film_id,
        g.genre_id,
        g.genre

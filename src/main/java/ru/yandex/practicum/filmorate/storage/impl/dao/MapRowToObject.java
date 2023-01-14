@@ -72,36 +72,15 @@ public class MapRowToObject {
     }
     public User mapRowToUser(ResultSet resultSet) throws SQLException, UserNotFoundException
             , FriendNotFoundException {
-        User user = User.builder()
+
+        return User.builder()
                 .id(resultSet.getInt("user_id"))
                 .login(resultSet.getString("login"))
                 .name(resultSet.getString("name"))
                 .email(resultSet.getString("email"))
                 .birthday(Objects.requireNonNull(resultSet.getDate("birthday")).toLocalDate())
+                .friends(getFriends(resultSet.getInt("user_id")))
                 .build();
-
-        if (user.getId() > 0) {
-            Map<Boolean, Set<Integer>> friends = new TreeMap<>();
-
-            String sqlQuery = "SELECT * FROM USERS_FRIENDS WHERE USER_ID = ? AND FRIENDSHIP_STATUS = false";
-            String sqlQueryForStatusTrue = "SELECT * FROM USERS_FRIENDS WHERE USER_ID = ? AND FRIENDSHIP_STATUS = true";
-
-            Set<Integer> friendsForStatusFalse = new TreeSet<>(jdbcTemplate.query(sqlQuery
-                    , (resultSet1, rowNumFalse) -> MapRowToObject.this.mapRowToFriendId(resultSet1), user.getId()));
-
-            friends.put(false, friendsForStatusFalse);
-
-            Set<Integer> friendsForStatusTrue = new TreeSet<>(jdbcTemplate.query(sqlQueryForStatusTrue
-                    , (resultSet1, rowNumFalse) -> MapRowToObject.this.mapRowToFriendId(resultSet1), user.getId()));
-
-            friends.put(true, friendsForStatusTrue);
-
-            user.setFriends(friends);
-        } else {
-            log.error("Пользователь с id = {} не найден.", user.getId());
-            throw new UserNotFoundException(String.format("Пользователь с id = %s не найден.", user.getId()));
-        }
-        return user;
     }
     public RatingMpa mapRowToRatingMpa(ResultSet resultSet) throws SQLException
             , RatingMpaNotFoundException {
@@ -119,6 +98,29 @@ public class MapRowToObject {
         }
         return ratingMpa;
     }
+    private Map<Boolean, Set<Integer>> getFriends (int userId) {
+        if (userId > 0) {
+            Map<Boolean, Set<Integer>> friends = new TreeMap<>();
+
+            String sqlQuery = "SELECT * FROM USERS_FRIENDS WHERE USER_ID = ? AND FRIENDSHIP_STATUS = false";
+            String sqlQueryForStatusTrue = "SELECT * FROM USERS_FRIENDS WHERE USER_ID = ? AND FRIENDSHIP_STATUS = true";
+
+            Set<Integer> friendsForStatusFalse = new TreeSet<>(jdbcTemplate.query(sqlQuery
+                    , (resultSet1, rowNumFalse) -> MapRowToObject.this.mapRowToFriendId(resultSet1), userId));
+
+            friends.put(false, friendsForStatusFalse);
+
+            Set<Integer> friendsForStatusTrue = new TreeSet<>(jdbcTemplate.query(sqlQueryForStatusTrue
+                    , (resultSet1, rowNumFalse) -> MapRowToObject.this.mapRowToFriendId(resultSet1), userId));
+
+            friends.put(true, friendsForStatusTrue);
+            return friends;
+        } else {
+            log.error("Пользователь с id = {} не найден.", userId);
+            throw new UserNotFoundException(String.format("Пользователь с id = %s не найден.", userId));
+        }
+    }
+
     private List<Genre> getGenres (int filmId) {
         if (filmId > 0) {
             String sqlQueryForGenres = "SELECT * FROM FILMS_GENRES_VIEW WHERE FILM_ID = ?";
