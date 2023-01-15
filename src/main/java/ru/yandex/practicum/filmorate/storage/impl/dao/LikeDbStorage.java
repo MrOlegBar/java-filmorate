@@ -40,8 +40,8 @@ public class LikeDbStorage {
         jdbcTemplate.update(sqlQuery, filmId, userId);
 
         String sqlQueryForAddLike = "UPDATE FILMS SET RATE = RATE + (SELECT COUNT(USER_ID) FROM FILMS_LIKES " +
-                "WHERE FILM_ID = ?) WHERE FILM_ID = ?";
-        jdbcTemplate.update(sqlQueryForAddLike, filmId, filmId);
+                "WHERE FILM_ID = ? AND USER_ID = ?) WHERE FILM_ID = ?";
+        jdbcTemplate.update(sqlQueryForAddLike, filmId, userId, filmId);
         log.info("Добавлен лайк от пользователя с id = {} фильму с id = {}", userId, filmId);
         return filmDbStorage.getFilmById(filmId);
     }
@@ -52,8 +52,8 @@ public class LikeDbStorage {
         filmDbStorage.getFilmById(filmId);
 
         String sqlQuery = "UPDATE FILMS SET RATE = RATE - (SELECT COUNT(USER_ID) FROM FILMS_LIKES " +
-                "WHERE FILM_ID = ?) WHERE FILM_ID = ?";
-        jdbcTemplate.update(sqlQuery, filmId, filmId);
+                "WHERE FILM_ID = ? AND USER_ID = ?) WHERE FILM_ID = ?";
+        jdbcTemplate.update(sqlQuery, filmId, userId, filmId);
 
         String sqlQueryForDeleteLike = "DELETE FROM FILMS_LIKES WHERE FILM_ID = ? AND USER_ID = ?";
         if (jdbcTemplate.update(sqlQueryForDeleteLike, filmId, userId) < 1) {
