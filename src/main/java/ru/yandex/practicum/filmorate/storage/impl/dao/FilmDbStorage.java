@@ -37,9 +37,10 @@ public class FilmDbStorage implements FilmStorage {
 
         putGenres(film);
 
-        log.info("Создан фильм: {}", getFilmById(filmId));
+        Film createdFilm = getFilmById(filmId);
+        log.info("Создан фильм: {}.", createdFilm);
 
-        return getFilmById(filmId);
+        return createdFilm;
     }
 
     @Override
@@ -89,8 +90,9 @@ public class FilmDbStorage implements FilmStorage {
 
         putGenres(film);
 
-        log.info("Фильм с filmId = {} обновлен.", film.getId());
-        return getFilmById(film.getId());
+        Film updatedFilm = getFilmById(film.getId());
+        log.info("Обновлен фильм: {}.", updatedFilm);
+        return updatedFilm;
     }
 
     private void putGenres(Film film) {
@@ -121,6 +123,7 @@ public class FilmDbStorage implements FilmStorage {
             String sqlQueryForDeleteGenres = "DELETE FROM FILMS_GENRES WHERE FILM_ID = ?";
             jdbcTemplate.update(sqlQueryForDeleteGenres, filmId);
         }
+
         log.info("Удалены жанры у фильма с filmId = {}", filmId);
     }
 

@@ -78,6 +78,7 @@ public class FriendDbStorage {
 
         String sqlQueryForFalse = "INSERT INTO USERS_FRIENDS VALUES (?, ?, false)";
         jdbcTemplate.update(sqlQueryForFalse, userId, friendId);
+
         log.info("Добавлен друг с friendId = {} пользователю с userId = {}", friendId, userId);
         return userDbStorage.getUserById(userId);
     }
@@ -109,6 +110,7 @@ public class FriendDbStorage {
             log.info("Удален друг с id = {} пользователю с id = {}", friendId, userId);
             return userDbStorage.getUserById(userId);
         }
+
         throw new IncorrectParameterException("Пользователь отсутствует в списке друзей.");
     }
 }

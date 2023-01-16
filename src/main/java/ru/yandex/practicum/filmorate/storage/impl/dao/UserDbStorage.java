@@ -31,9 +31,9 @@ public class UserDbStorage implements UserStorage {
 
         int userId = simpleJdbcInsert.executeAndReturnKey(user.toMap(user)).intValue();
 
-        log.info("Создан пользователь: {}", getUserById(userId));
-
-        return getUserById(userId);
+        User createdUser = getUserById(userId);
+        log.info("Создан пользователь: {}.", createdUser);
+        return createdUser;
     }
 
     @Override
@@ -73,8 +73,10 @@ public class UserDbStorage implements UserStorage {
         jdbcTemplate.update(sqlQuery, user.getLogin(), user.getName().isBlank() ? user.getLogin() : user.getName()
                 , user.getEmail(), user.getBirthday() , user.getId());
 
-        log.info("Пользователь с userId = {} обновлен.", user.getId());
-        return getUserById(user.getId());
+        User updatedUser = getUserById(user.getId());
+
+        log.info("Обновлен пользователь: {}.", updatedUser);
+        return updatedUser;
     }
 
     Map<Boolean, Set<Integer>> getFriends(int userId) throws UserNotFoundException {

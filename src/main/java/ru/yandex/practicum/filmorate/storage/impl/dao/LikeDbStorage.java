@@ -49,6 +49,7 @@ public class LikeDbStorage {
         String sqlQueryForAddLike = "UPDATE FILMS SET RATE = RATE + (SELECT COUNT(USER_ID) FROM FILMS_LIKES " +
                 "WHERE FILM_ID = ? AND USER_ID = ?) WHERE FILM_ID = ?";
         jdbcTemplate.update(sqlQueryForAddLike, filmId, userId, filmId);
+
         log.info("Добавлен лайк от пользователя с userId = {} фильму с filmId = {}", userId, filmId);
         return filmDbStorage.getFilmById(filmId);
     }
