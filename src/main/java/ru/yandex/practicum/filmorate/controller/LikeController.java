@@ -19,7 +19,8 @@ public class LikeController {
     public Collection<Film> getPopularFilms(@RequestParam(defaultValue = "10") Integer count)
             throws FilmNotFoundException {
         if (count <= 0) {
-            throw new IncorrectParameterException(String.format("Параметр метода должен быть > 0, count = %s", count));
+            throw new IncorrectParameterException(String.format("Параметр метода count должен быть > 0, count = %s"
+                    , count));
         }
         return likeService.getPopularFilms(count);
     }

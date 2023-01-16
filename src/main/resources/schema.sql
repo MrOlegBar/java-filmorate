@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS films (
     release_date DATE NOT NULL,
     duration INTEGER NOT NULL CHECK (duration > 0),
     rating_MPA_id INTEGER REFERENCES ratings_MPA (rating_MPA_id) ON DELETE RESTRICT,
-    rate INTEGER CHECK (rate > 0)
+    rate INTEGER CHECK (rate >= 0)
 );
 
 CREATE TABLE IF NOT EXISTS genres (
@@ -60,7 +60,7 @@ LEFT OUTER JOIN ratings_MPA rm ON f.rating_MPA_id = rm.rating_MPA_id;
 
 CREATE OR REPLACE VIEW films_genres_view AS
 SELECT f.film_id,
-       g.genre_id,
+       fg.genre_id,
        g.genre
 FROM films f
 LEFT OUTER JOIN films_genres fg on f.film_id = fg.film_id

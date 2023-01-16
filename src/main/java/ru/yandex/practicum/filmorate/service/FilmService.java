@@ -3,7 +3,6 @@ package ru.yandex.practicum.filmorate.service;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
-import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.film.Film;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
@@ -25,7 +24,7 @@ public class FilmService {
         return filmDbStorage.getFilmById(filmId);
     }
 
-    public Film update(Film film) throws FilmNotFoundException, UserNotFoundException {
+    public Film update(Film film) throws FilmNotFoundException {
         return filmDbStorage.update(film);
     }
 }

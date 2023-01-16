@@ -17,7 +17,7 @@ public class FilmController {
     @PostMapping("/films")
     public Film postFilm(@Valid @RequestBody Film film) throws ValidationException, FilmNotFoundException {
         if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
-            throw new ValidationException("Дата релиза должны быть не раньше 28.12.1895 г.");
+            throw new ValidationException("Дата релиза должна быть не раньше 28.12.1895 г.");
         }
         return filmService.create(film);
     }
@@ -32,7 +32,7 @@ public class FilmController {
     }
 
     @PutMapping("/films")
-    public Film putFilm(@RequestBody @Valid Film film) throws FilmNotFoundException, UserNotFoundException {
+    public Film putFilm(@RequestBody @Valid Film film) throws FilmNotFoundException {
         return filmService.update(film);
     }
 }

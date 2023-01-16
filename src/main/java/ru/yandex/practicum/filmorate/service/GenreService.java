@@ -13,7 +13,7 @@ import java.util.Collection;
 public class GenreService {
     private final GenreDbStorage genreDbStorage;
 
-    public Collection<Genre> getAllGenres() throws GenreNotFoundException {
+    public Collection<Genre> getAllGenres() {
         return genreDbStorage.getAllGenres();
     }
 

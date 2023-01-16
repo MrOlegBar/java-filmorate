@@ -2,7 +2,6 @@ package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -36,11 +35,6 @@ public class ErrorHandler {
         return new ErrorResponse(e.getMessage());
     }
 
-    @ExceptionHandler({EmptyResultDataAccessException.class})
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleIncorrectParameter() {
-        return new ErrorResponse("По такому индентификатору данные не найдены.");
-    }
     @ExceptionHandler({DuplicateKeyException.class})
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleDuplicateKey() {

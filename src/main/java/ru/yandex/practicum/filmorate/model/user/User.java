@@ -12,7 +12,7 @@ import java.util.*;
 public class User {
     @Digits(integer = 2_147_483_647, fraction = 0)
     private int id;
-    @Pattern(regexp = "\\S*", message = "Логин пользователя не должен содержать пустой символ.")
+    @Pattern(regexp = "\\S*", message = "Логин пользователя не может быть пустым и содержать пробелы.")
     private String login;
     private String name;
     @NotNull(message = "Электронная почта отсутствует.")
@@ -26,7 +26,7 @@ public class User {
     public Map<String, Object> toMap(User user) {
         Map<String, Object> values = new HashMap<>();
         values.put("login", user.getLogin());
-        values.put("name", user.getName());
+        values.put("name", user.getName().isBlank() ? user.getLogin() : user.getName());
         values.put("email", user.getEmail());
         values.put("birthday",  user.getBirthday());
         return values;

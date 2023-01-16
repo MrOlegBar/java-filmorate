@@ -13,7 +13,7 @@ import java.util.Collection;
 public class RatingMpaService {
     private final RatingMpaDbStorage ratingMpaStorage;
 
-    public Collection<RatingMpa> getAllRatingsMpa() throws RatingMpaNotFoundException {
+    public Collection<RatingMpa> getAllRatingsMpa() {
         return ratingMpaStorage.getAllRatingsMpa();
     }
 

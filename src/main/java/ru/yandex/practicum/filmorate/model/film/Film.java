@@ -12,9 +12,9 @@ import java.util.*;
 public class Film {
     @Digits(integer = 2_147_483_647, fraction = 0)
     private int id;
-    @NotBlank(message = "Название фильма отсутствует.")
+    @NotBlank(message = "Название фильма отсутствует или представлено пустым символом.")
     private String name;
-    @Size(max = 200, message = "Количество символов в описании фильма > 200")
+    @Size(max = 200, message = "Количество символов в описании фильма > 200.")
     @NotNull(message = "Описание отсутствует.")
     private String description;
     @NotNull(message = "Дата выхода фильма отсутствует.")
@@ -35,7 +35,7 @@ public class Film {
         values.put("release_date", film.getReleaseDate());
         values.put("duration",  film.getDuration());
         values.put("rating_MPA_id",  film.getMpa().getId());
-        values.put("rate",  film.getRate());
+        values.put("rate",  (film.getRate() == null) ? 0 : film.getRate());
         return values;
     }
 }

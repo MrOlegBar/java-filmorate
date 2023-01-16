@@ -4,12 +4,12 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import ru.yandex.practicum.filmorate.exception.FriendNotFoundException;
 import ru.yandex.practicum.filmorate.exception.IncorrectParameterException;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
+import ru.yandex.practicum.filmorate.mapper.UserMapper;
 import ru.yandex.practicum.filmorate.model.user.User;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
@@ -18,26 +18,26 @@ import java.util.Set;
 @Slf4j
 public class FriendDbStorage {
     private final JdbcTemplate jdbcTemplate;
-    private final MapRowToObject mapRowToObject;
     private final UserDbStorage userDbStorage;
 
     public FriendDbStorage(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.mapRowToObject = new MapRowToObject(jdbcTemplate);
         this.userDbStorage = new UserDbStorage(jdbcTemplate);
     }
 
-    public List<User> getAllFriends(int userId) throws UserNotFoundException, FriendNotFoundException {
+    public Collection<User> getAllFriends(int userId) throws UserNotFoundException {
         userDbStorage.getUserById(userId);
 
         String sqlQueryForFriends = "SELECT * FROM USERS WHERE USER_ID IN (SELECT FRIEND_ID FROM USERS_FRIENDS " +
                 "WHERE USER_ID = ?)";
+        Collection<User> users = jdbcTemplate.query(sqlQueryForFriends, (resultSet, rowNum)
+                -> UserMapper.mapRowToUser(resultSet), userId);
 
-        return jdbcTemplate.query(sqlQueryForFriends, (resultSet, rowNum) -> mapRowToObject.mapRowToUser(resultSet), userId);
+        users.forEach(user -> user.setFriends(userDbStorage.getFriends(user.getId())));
+        return users;
     }
 
-    public List<User> getCorporateFriends(int userId, int otherUserId) throws UserNotFoundException
-            , FriendNotFoundException {
+    public Collection<User> getCorporateFriends(int userId, int otherUserId) throws UserNotFoundException {
         userDbStorage.getUserById(userId);
         userDbStorage.getUserById(otherUserId);
 
@@ -45,11 +45,14 @@ public class FriendDbStorage {
                 "FRIEND_ID FROM USERS_FRIENDS WHERE USER_ID = ?) WHERE FRIEND_ID IN (SELECT FRIEND_ID " +
                 "FROM USERS_FRIENDS WHERE USER_ID = ?))";
 
-        return jdbcTemplate.query(sqlQueryForFriends, (resultSet, rowNum) -> mapRowToObject.mapRowToUser(resultSet), userId, otherUserId);
+        Collection<User> users = jdbcTemplate.query(sqlQueryForFriends, (resultSet, rowNum)
+                -> UserMapper.mapRowToUser(resultSet), userId, otherUserId);
+
+        users.forEach(user -> user.setFriends(userDbStorage.getFriends(user.getId())));
+        return users;
     }
 
-    public User addFriend(int userId, int friendId) throws UserNotFoundException, FriendNotFoundException
-            , IncorrectParameterException {
+    public User addFriend(int userId, int friendId) throws UserNotFoundException, IncorrectParameterException {
         User user = userDbStorage.getUserById(userId);
         User friend = userDbStorage.getUserById(friendId);
 
@@ -64,6 +67,7 @@ public class FriendDbStorage {
         if(friendFriendsTrue.contains(userId) || userFriendsTrue.contains(friendId)) {
             throw new IncorrectParameterException("Пользователь уже добавлен в друзья.");
         }
+
         if (friendFriendsFalse.contains(userId) || userFriendsFalse.contains(friendId)) {
             String sqlQueryForTrue = "MERGE INTO USERS_FRIENDS KEY(USER_ID, FRIEND_ID) VALUES (?, ?, true)";
             jdbcTemplate.update(sqlQueryForTrue, userId, friendId);
@@ -74,12 +78,11 @@ public class FriendDbStorage {
 
         String sqlQueryForFalse = "INSERT INTO USERS_FRIENDS VALUES (?, ?, false)";
         jdbcTemplate.update(sqlQueryForFalse, userId, friendId);
-        log.info("Добавлен друг с id = {} пользователю с id = {}", friendId, userId);
+        log.info("Добавлен друг с friendId = {} пользователю с userId = {}", friendId, userId);
         return userDbStorage.getUserById(userId);
     }
 
-    public User deleteFriend(int userId, int friendId) throws UserNotFoundException, FriendNotFoundException
-            , IncorrectParameterException {
+    public User deleteFriend(int userId, int friendId) throws UserNotFoundException, IncorrectParameterException {
         userDbStorage.getUserById(friendId);
         User user = userDbStorage.getUserById(userId);
 
