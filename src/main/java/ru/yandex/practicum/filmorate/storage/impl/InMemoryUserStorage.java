@@ -12,7 +12,7 @@ import java.util.TreeMap;
 
 @Component("inMemoryUserStorage")
 @Slf4j
-public class InMemoryUserDao implements UserDao {
+public class InMemoryUserStorage implements UserDao {
     private final Map<String, User> users = new TreeMap<>();
     private static Integer globalId = 0;
 

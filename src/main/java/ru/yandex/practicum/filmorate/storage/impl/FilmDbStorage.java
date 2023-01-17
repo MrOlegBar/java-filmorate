@@ -137,8 +137,8 @@ public class FilmDbStorage implements FilmDao {
     public List<Genre> getGenres(int filmId) {
         String sqlQueryForGenres = "SELECT * FROM FILMS_GENRES_VIEW WHERE FILM_ID = ?";
 
-        List<Genre> genres = new ArrayList<>(jdbcTemplate.query(sqlQueryForGenres
-                    , (resultSet1, rowNum) -> GenreMapper.mapRowToGenre(resultSet1), filmId));
+        List<Genre> genres = new ArrayList<>(jdbcTemplate.query(sqlQueryForGenres, (resultSet1, rowNum)
+                -> GenreMapper.mapRowToGenre(resultSet1), filmId));
 
         if (genres.contains(null)) {
             genres.clear();

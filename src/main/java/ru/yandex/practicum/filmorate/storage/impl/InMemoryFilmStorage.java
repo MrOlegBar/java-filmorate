@@ -14,7 +14,7 @@ import java.util.TreeMap;
 
 @Component("inMemoryFilmStorage")
 @Slf4j
-public class InMemoryFilmDao implements FilmDao {
+public class InMemoryFilmStorage implements FilmDao {
     private final Map<Integer, Film> films = new TreeMap<>();
     private final LocalDate dateCheck = LocalDate.of(1895, 12, 28);
     private static Integer globalId = 0;

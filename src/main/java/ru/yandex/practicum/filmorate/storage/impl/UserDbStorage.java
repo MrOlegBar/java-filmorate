@@ -70,8 +70,8 @@ public class UserDbStorage implements UserDao {
         getUserById(user.getId());
 
         String sqlQuery = "UPDATE USERS SET LOGIN = ?, NAME = ?, EMAIL = ?, BIRTHDAY = ? WHERE USER_ID = ?";
-        jdbcTemplate.update(sqlQuery, user.getLogin(), user.getName().isBlank() ? user.getLogin() : user.getName()
-                , user.getEmail(), user.getBirthday() , user.getId());
+        jdbcTemplate.update(sqlQuery, user.getLogin(), user.getName().isBlank() ? user.getLogin() : user.getName(),
+                user.getEmail(), user.getBirthday() , user.getId());
 
         User updatedUser = getUserById(user.getId());
 
@@ -85,13 +85,13 @@ public class UserDbStorage implements UserDao {
         String sqlQuery = "SELECT * FROM USERS_FRIENDS WHERE USER_ID = ? AND FRIENDSHIP_STATUS = false";
         String sqlQueryForStatusTrue = "SELECT * FROM USERS_FRIENDS WHERE USER_ID = ? AND FRIENDSHIP_STATUS = true";
 
-        Set<Integer> friendsForStatusFalse = new TreeSet<>(jdbcTemplate.query(sqlQuery
-                , (resultSet1, rowNumFalse) -> FriendMapper.mapRowToFriendId(resultSet1), userId));
+        Set<Integer> friendsForStatusFalse = new TreeSet<>(jdbcTemplate.query(sqlQuery, (resultSet1, rowNumFalse)
+                -> FriendMapper.mapRowToFriendId(resultSet1), userId));
 
         friends.put(false, friendsForStatusFalse);
 
-        Set<Integer> friendsForStatusTrue = new TreeSet<>(jdbcTemplate.query(sqlQueryForStatusTrue
-                , (resultSet1, rowNumFalse) -> FriendMapper.mapRowToFriendId(resultSet1), userId));
+        Set<Integer> friendsForStatusTrue = new TreeSet<>(jdbcTemplate.query(sqlQueryForStatusTrue,
+                (resultSet1, rowNumFalse) -> FriendMapper.mapRowToFriendId(resultSet1), userId));
 
         friends.put(true, friendsForStatusTrue);
         return friends;

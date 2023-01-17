@@ -31,8 +31,8 @@ public class LikeDao {
 
     public Collection<Film> getPopularFilms(Integer count) {
         String sqlQuery = "SELECT * FROM FILMS_RATINGS_MPA_VIEW ORDER BY RATE DESC LIMIT ?";
-        Collection<Film> films = jdbcTemplate.query(sqlQuery, (resultSet, rowNum) -> FilmMapper.mapRowToFilm(resultSet)
-                , count);
+        Collection<Film> films = jdbcTemplate.query(sqlQuery, (resultSet, rowNum) -> FilmMapper.mapRowToFilm(resultSet),
+                count);
 
         films.forEach(film -> {
             film.setLikes(filmDbStorage.getLikes(film.getId()));
@@ -56,8 +56,8 @@ public class LikeDao {
         return filmDbStorage.getFilmById(filmId);
     }
 
-    public Film deleteLike(int filmId, int userId) throws UserNotFoundException, FilmNotFoundException
-            , IncorrectParameterException {
+    public Film deleteLike(int filmId, int userId) throws UserNotFoundException, FilmNotFoundException,
+            IncorrectParameterException {
         userDbStorage.getUserById(userId);
         filmDbStorage.getFilmById(filmId);
 
