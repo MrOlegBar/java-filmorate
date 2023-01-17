@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.storage.impl.dao;
+package ru.yandex.practicum.filmorate.storage.dao;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,14 +14,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @AutoConfigureTestDatabase
-class FriendDbStorageTest {
+class FriendDaoTest {
     @Autowired
-    FriendDbStorage friendDbStorage;
+    FriendDao friendDao;
 
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void addFriend() {
-        User testUser = friendDbStorage.getUserDbStorage().create(User.builder()
+        User testUser = friendDao.getUserDbStorage().create(User.builder()
                 .login("login")
                 .name("name")
                 .email("email@mail.ru")
@@ -29,14 +29,14 @@ class FriendDbStorageTest {
                 .friends(new TreeMap<>())
                 .build());
 
-        User testFriend = friendDbStorage.getUserDbStorage().create(User.builder()
+        User testFriend = friendDao.getUserDbStorage().create(User.builder()
                 .login("testFriend login")
                 .name("testFriend name")
                 .email("friendemail@mail.ru")
                 .birthday(LocalDate.parse("1967-10-25"))
                 .build());
 
-        User foundUser = friendDbStorage.addFriend(testUser.getId(), testFriend.getId());
+        User foundUser = friendDao.addFriend(testUser.getId(), testFriend.getId());
 
         Map<Boolean, Set<Integer>> userFriends = testUser.getFriends();
         Set<Integer> falseUserFriends = userFriends.get(false);
@@ -47,7 +47,7 @@ class FriendDbStorageTest {
         assertNotNull(foundUser);
         assertEquals(testUser, foundUser);
 
-        User foundFriend = friendDbStorage.addFriend(testFriend.getId(), testUser.getId());
+        User foundFriend = friendDao.addFriend(testFriend.getId(), testUser.getId());
 
         Map<Boolean, Set<Integer>> friendFriends = testFriend.getFriends();
         Set<Integer> trueFriendFriends = friendFriends.get(true);
@@ -62,7 +62,7 @@ class FriendDbStorageTest {
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void getAllFriends() {
-        User testUser = friendDbStorage.getUserDbStorage().create(User.builder()
+        User testUser = friendDao.getUserDbStorage().create(User.builder()
                 .login("login")
                 .name("name")
                 .email("email@mail.ru")
@@ -70,23 +70,23 @@ class FriendDbStorageTest {
                 .friends(new TreeMap<>())
                 .build());
 
-        User testFriend = friendDbStorage.getUserDbStorage().create(User.builder()
+        User testFriend = friendDao.getUserDbStorage().create(User.builder()
                 .login("testFriend login")
                 .name("testFriend name")
                 .email("friendemail@mail.ru")
                 .birthday(LocalDate.parse("1967-10-25"))
                 .build());
 
-        friendDbStorage.addFriend(testUser.getId(), testFriend.getId());
+        friendDao.addFriend(testUser.getId(), testFriend.getId());
 
-        Collection<User> foundUserFriends = friendDbStorage.getAllFriends(testUser.getId());
+        Collection<User> foundUserFriends = friendDao.getAllFriends(testUser.getId());
         Collection<User> testUserFriends = new ArrayList<>();
         testUserFriends.add(testFriend);
 
         assertNotNull(foundUserFriends);
         assertEquals(testUserFriends, foundUserFriends);
 
-        friendDbStorage.addFriend(testFriend.getId(), testUser.getId());
+        friendDao.addFriend(testFriend.getId(), testUser.getId());
 
         Map<Boolean, Set<Integer>> userFriends = testUser.getFriends();
         Set<Integer> trueUserFriends = userFriends.get(true);
@@ -94,7 +94,7 @@ class FriendDbStorageTest {
         userFriends.put(true, trueUserFriends);
         testUser.setFriends(userFriends);
 
-        Collection<User> foundFriendFriends = friendDbStorage.getAllFriends(testFriend.getId());
+        Collection<User> foundFriendFriends = friendDao.getAllFriends(testFriend.getId());
         Collection<User> testFriendFriends = new ArrayList<>();
         testFriendFriends.add(testUser);
 
@@ -105,7 +105,7 @@ class FriendDbStorageTest {
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void getCorporateFriends() {
-        User testUser = friendDbStorage.getUserDbStorage().create(User.builder()
+        User testUser = friendDao.getUserDbStorage().create(User.builder()
                 .login("login")
                 .name("name")
                 .email("email@mail.ru")
@@ -113,26 +113,26 @@ class FriendDbStorageTest {
                 .friends(new TreeMap<>())
                 .build());
 
-        User testFriend = friendDbStorage.getUserDbStorage().create(User.builder()
+        User testFriend = friendDao.getUserDbStorage().create(User.builder()
                 .login("testFriend login")
                 .name("testFriend name")
                 .email("friendemail@mail.ru")
                 .birthday(LocalDate.parse("1967-10-25"))
                 .build());
 
-        User testCommonFriend = friendDbStorage.getUserDbStorage().create(User.builder()
+        User testCommonFriend = friendDao.getUserDbStorage().create(User.builder()
                 .login("commonFriend login")
                 .name("commonFriend name")
                 .email("commonfriendemail@mail.ru")
                 .birthday(LocalDate.parse("1967-07-25"))
                 .build());
 
-        friendDbStorage.addFriend(testUser.getId(), testCommonFriend.getId());
-        friendDbStorage.addFriend(testCommonFriend.getId(), testUser.getId());
-        friendDbStorage.addFriend(testFriend.getId(), testCommonFriend.getId());
-        friendDbStorage.addFriend(testCommonFriend.getId(), testFriend.getId());
+        friendDao.addFriend(testUser.getId(), testCommonFriend.getId());
+        friendDao.addFriend(testCommonFriend.getId(), testUser.getId());
+        friendDao.addFriend(testFriend.getId(), testCommonFriend.getId());
+        friendDao.addFriend(testCommonFriend.getId(), testFriend.getId());
 
-        Collection<User> foundCommonFriends = friendDbStorage.getCorporateFriends(testUser.getId(),testFriend.getId());
+        Collection<User> foundCommonFriends = friendDao.getCorporateFriends(testUser.getId(),testFriend.getId());
 
         Map<Boolean, Set<Integer>> commonFriendFriends = testCommonFriend.getFriends();
         Set<Integer> trueCommonFriendFriends = commonFriendFriends.get(true);
@@ -151,7 +151,7 @@ class FriendDbStorageTest {
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void deleteFriend() {
-        User user = friendDbStorage.getUserDbStorage().create(User.builder()
+        User user = friendDao.getUserDbStorage().create(User.builder()
                 .login("login")
                 .name("name")
                 .email("email@mail.ru")
@@ -159,16 +159,16 @@ class FriendDbStorageTest {
                 .friends(new TreeMap<>())
                 .build());
 
-        User friend = friendDbStorage.getUserDbStorage().create(User.builder()
+        User friend = friendDao.getUserDbStorage().create(User.builder()
                 .login("friend login")
                 .name("friend name")
                 .email("friendemail@mail.ru")
                 .birthday(LocalDate.parse("1967-10-25"))
                 .build());
 
-        friendDbStorage.addFriend(user.getId(), friend.getId());
-        friendDbStorage.addFriend(friend.getId(), user.getId());
-        User testFriend = friendDbStorage.deleteFriend(friend.getId(), user.getId());
+        friendDao.addFriend(user.getId(), friend.getId());
+        friendDao.addFriend(friend.getId(), user.getId());
+        User testFriend = friendDao.deleteFriend(friend.getId(), user.getId());
 
         Map<Boolean, Set<Integer>> friendFriends = friend.getFriends();
         Set<Integer> falseFriendFriends = friendFriends.get(false);
@@ -179,7 +179,7 @@ class FriendDbStorageTest {
         assertNotNull(testFriend);
         assertEquals(friend, testFriend);
 
-        User testUser = friendDbStorage.deleteFriend(user.getId(), friend.getId());
+        User testUser = friendDao.deleteFriend(user.getId(), friend.getId());
 
         falseFriendFriends.clear();
         friendFriends.put(false, falseFriendFriends);

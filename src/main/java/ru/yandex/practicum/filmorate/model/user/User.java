@@ -23,12 +23,12 @@ public class User {
     private LocalDate birthday;
     private Map<Boolean, Set<Integer>> friends;
 
-    public Map<String, Object> toMap(User user) {
+    public Map<String, Object> toMap() {
         Map<String, Object> values = new HashMap<>();
-        values.put("login", user.getLogin());
-        values.put("name", user.getName().isBlank() ? user.getLogin() : user.getName());
-        values.put("email", user.getEmail());
-        values.put("birthday",  user.getBirthday());
+        values.put("login", login);
+        values.put("name", name.isBlank() ? login : name);
+        values.put("email", email);
+        values.put("birthday", birthday);
         return values;
     }
 }

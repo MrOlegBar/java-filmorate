@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.storage.impl.dao;
+package ru.yandex.practicum.filmorate.storage.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -9,11 +9,11 @@ import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.mapper.FilmMapper;
 import ru.yandex.practicum.filmorate.mapper.GenreMapper;
 import ru.yandex.practicum.filmorate.mapper.LikeMapper;
-import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.model.film.Film;
 import lombok.extern.slf4j.Slf4j;
 import ru.yandex.practicum.filmorate.model.film.Genre;
+import ru.yandex.practicum.filmorate.storage.dao.FilmDao;
 
 import java.sql.PreparedStatement;
 import java.util.*;
@@ -22,7 +22,7 @@ import java.util.*;
 @Repository
 @Slf4j
 @AllArgsConstructor
-public class FilmDbStorage implements FilmStorage {
+public class FilmDbStorage implements FilmDao {
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -32,7 +32,7 @@ public class FilmDbStorage implements FilmStorage {
                 .withTableName("films")
                 .usingGeneratedKeyColumns("film_id");
 
-        int filmId = simpleJdbcInsert.executeAndReturnKey(film.toMap(film)).intValue();
+        int filmId = simpleJdbcInsert.executeAndReturnKey(film.toMap()).intValue();
         film.setId(filmId);
 
         putGenres(film);
@@ -127,14 +127,14 @@ public class FilmDbStorage implements FilmStorage {
         log.info("Удалены жанры у фильма с filmId = {}", filmId);
     }
 
-    Set<Integer> getLikes(int filmId) {
+    public Set<Integer> getLikes(int filmId) {
         String sqlQueryForLikes = "SELECT * FROM FILMS_LIKES WHERE FILM_ID = ?";
 
         return new TreeSet<>(jdbcTemplate.query(sqlQueryForLikes, (resultSetLikes, rowNumLikes)
                     -> LikeMapper.mapRowToUserId(resultSetLikes), filmId));
     }
 
-    List<Genre> getGenres(int filmId) {
+    public List<Genre> getGenres(int filmId) {
         String sqlQueryForGenres = "SELECT * FROM FILMS_GENRES_VIEW WHERE FILM_ID = ?";
 
         List<Genre> genres = new ArrayList<>(jdbcTemplate.query(sqlQueryForGenres

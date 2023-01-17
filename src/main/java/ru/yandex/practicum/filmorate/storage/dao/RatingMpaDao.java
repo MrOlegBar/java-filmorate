@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.storage.impl.dao;
+package ru.yandex.practicum.filmorate.storage.dao;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +14,7 @@ import java.util.Collection;
 @Repository
 @Slf4j
 @AllArgsConstructor
-public class RatingMpaDbStorage {
+public class RatingMpaDao {
     private final JdbcTemplate jdbcTemplate;
 
     public Collection<RatingMpa> getAllRatingsMpa() {

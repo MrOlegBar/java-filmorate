@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.storage.impl.dao;
+package ru.yandex.practicum.filmorate.storage.dao;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -8,6 +8,7 @@ import ru.yandex.practicum.filmorate.exception.IncorrectParameterException;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.mapper.UserMapper;
 import ru.yandex.practicum.filmorate.model.user.User;
+import ru.yandex.practicum.filmorate.storage.impl.UserDbStorage;
 
 import java.util.Collection;
 import java.util.Map;
@@ -16,11 +17,11 @@ import java.util.Set;
 @Repository
 @Getter
 @Slf4j
-public class FriendDbStorage {
+public class FriendDao {
     private final JdbcTemplate jdbcTemplate;
     private final UserDbStorage userDbStorage;
 
-    public FriendDbStorage(JdbcTemplate jdbcTemplate) {
+    public FriendDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.userDbStorage = new UserDbStorage(jdbcTemplate);
     }

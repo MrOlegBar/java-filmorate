@@ -1,10 +1,10 @@
-package ru.yandex.practicum.filmorate.storage;
+package ru.yandex.practicum.filmorate.storage.dao;
 
 import ru.yandex.practicum.filmorate.model.user.User;
 
 import java.util.Collection;
 
-public interface UserStorage {
+public interface UserDao {
     User create(User user);
 
     Collection<User> getAllUsers();

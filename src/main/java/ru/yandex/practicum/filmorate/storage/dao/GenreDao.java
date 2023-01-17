@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.storage.impl.dao;
+package ru.yandex.practicum.filmorate.storage.dao;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +14,7 @@ import java.util.*;
 @Repository
 @Slf4j
 @AllArgsConstructor
-public class GenreDbStorage {
+public class GenreDao {
     private final JdbcTemplate jdbcTemplate;
 
     public Collection<Genre> getAllGenres() {

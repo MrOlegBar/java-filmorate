@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.storage.impl.dao;
+package ru.yandex.practicum.filmorate.storage.dao;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +15,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 @AutoConfigureTestDatabase
-public class RatingMpaDbStorageTest {
+public class RatingMpaDaoTest {
     @Autowired
-    RatingMpaDbStorage ratingMpaDbStorage;
+    RatingMpaDao ratingMpaDao;
 
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
@@ -30,7 +30,7 @@ public class RatingMpaDbStorageTest {
         testRatingsMpa.add(RatingMpa.builder().id(4).name("R").build());
         testRatingsMpa.add(RatingMpa.builder().id(5).name("NC-17").build());
 
-        Collection<RatingMpa> foundRatingsMpa = ratingMpaDbStorage.getAllRatingsMpa();
+        Collection<RatingMpa> foundRatingsMpa = ratingMpaDao.getAllRatingsMpa();
 
         assertNotNull(foundRatingsMpa);
         assertEquals(testRatingsMpa, foundRatingsMpa);
@@ -41,7 +41,7 @@ public class RatingMpaDbStorageTest {
     void getRatingMpaById() {
         RatingMpa testRatingMpa = RatingMpa.builder().id(1).name("G").build();
 
-        RatingMpa foundRatingMpa = ratingMpaDbStorage.getRatingMpaById(1);
+        RatingMpa foundRatingMpa = ratingMpaDao.getRatingMpaById(1);
 
         assertNotNull(foundRatingMpa);
         assertEquals(testRatingMpa, foundRatingMpa);

@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.storage.impl.dao;
+package ru.yandex.practicum.filmorate.storage.impl;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,9 +9,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.mapper.FriendMapper;
 import ru.yandex.practicum.filmorate.mapper.UserMapper;
-import ru.yandex.practicum.filmorate.storage.UserStorage;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.user.User;
+import ru.yandex.practicum.filmorate.storage.dao.UserDao;
 
 import java.util.*;
 
@@ -19,7 +19,7 @@ import java.util.*;
 @Repository
 @Slf4j
 @AllArgsConstructor
-public class UserDbStorage implements UserStorage {
+public class UserDbStorage implements UserDao {
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -29,7 +29,7 @@ public class UserDbStorage implements UserStorage {
                 .withTableName("users")
                 .usingGeneratedKeyColumns("user_id");
 
-        int userId = simpleJdbcInsert.executeAndReturnKey(user.toMap(user)).intValue();
+        int userId = simpleJdbcInsert.executeAndReturnKey(user.toMap()).intValue();
 
         User createdUser = getUserById(userId);
         log.info("Создан пользователь: {}.", createdUser);
@@ -79,7 +79,7 @@ public class UserDbStorage implements UserStorage {
         return updatedUser;
     }
 
-    Map<Boolean, Set<Integer>> getFriends(int userId) throws UserNotFoundException {
+    public Map<Boolean, Set<Integer>> getFriends(int userId) throws UserNotFoundException {
         Map<Boolean, Set<Integer>> friends = new TreeMap<>();
 
         String sqlQuery = "SELECT * FROM USERS_FRIENDS WHERE USER_ID = ? AND FRIENDSHIP_STATUS = false";

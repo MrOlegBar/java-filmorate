@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.storage.impl.dao;
+package ru.yandex.practicum.filmorate.storage.dao;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +15,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 @AutoConfigureTestDatabase
-public class GenreDbStorageTest {
+public class GenreDaoTest {
 
     @Autowired
-    GenreDbStorage genreDbStorage;
+    GenreDao genreDao;
 
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
@@ -32,7 +32,7 @@ public class GenreDbStorageTest {
         testGenres.add(Genre.builder().id(5).name("Документальный").build());
         testGenres.add(Genre.builder().id(6).name("Боевик").build());
 
-        Collection<Genre> foundGenres = genreDbStorage.getAllGenres();
+        Collection<Genre> foundGenres = genreDao.getAllGenres();
 
         assertNotNull(foundGenres);
         assertEquals(testGenres, foundGenres);
@@ -43,7 +43,7 @@ public class GenreDbStorageTest {
     void getGenreById() {
         Genre testGenre = Genre.builder().id(1).name("Комедия").build();
 
-        Genre foundGenre = genreDbStorage.getGenreById(1);
+        Genre foundGenre = genreDao.getGenreById(1);
 
         assertNotNull(foundGenre);
         assertEquals(testGenre, foundGenre);

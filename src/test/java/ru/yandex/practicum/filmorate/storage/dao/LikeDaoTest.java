@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.storage.impl.dao;
+package ru.yandex.practicum.filmorate.storage.dao;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,14 +17,14 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 @AutoConfigureTestDatabase
-public class LikeDbStorageTest {
+public class LikeDaoTest {
     @Autowired
-    LikeDbStorage likeDbStorage;
+    LikeDao likeDao;
 
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void addLike() {
-        User testUser = likeDbStorage.getUserDbStorage().create(User.builder()
+        User testUser = likeDao.getUserDbStorage().create(User.builder()
                 .login("login")
                 .name("name")
                 .email("email@mail.ru")
@@ -32,7 +32,7 @@ public class LikeDbStorageTest {
                 .friends(new TreeMap<>())
                 .build());
 
-        Film testFilm = likeDbStorage.getFilmDbStorage().create(Film.builder()
+        Film testFilm = likeDao.getFilmDbStorage().create(Film.builder()
                 .name("name")
                 .description("description")
                 .releaseDate(LocalDate.parse("1967-03-25"))
@@ -44,7 +44,7 @@ public class LikeDbStorageTest {
                 .genres(new ArrayList<>())
                 .build());
 
-        Film foundFilm = likeDbStorage.addLike(testFilm.getId(), testUser.getId());
+        Film foundFilm = likeDao.addLike(testFilm.getId(), testUser.getId());
 
         Set<Integer> likes = testFilm.getLikes();
         likes.add(testUser.getId());
@@ -58,7 +58,7 @@ public class LikeDbStorageTest {
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void getPopularFilms() {
-        User user = likeDbStorage.getUserDbStorage().create(User.builder()
+        User user = likeDao.getUserDbStorage().create(User.builder()
                 .login("login")
                 .name("name")
                 .email("email@mail.ru")
@@ -66,7 +66,7 @@ public class LikeDbStorageTest {
                 .friends(new TreeMap<>())
                 .build());
 
-        Film film = likeDbStorage.getFilmDbStorage().create(Film.builder()
+        Film film = likeDao.getFilmDbStorage().create(Film.builder()
                 .name("name")
                 .description("description")
                 .releaseDate(LocalDate.parse("1967-03-25"))
@@ -78,8 +78,8 @@ public class LikeDbStorageTest {
                 .genres(new ArrayList<>())
                 .build());
 
-        likeDbStorage.addLike(film.getId(), user.getId());
-        Collection<Film> foundFilms = likeDbStorage.getPopularFilms(10);
+        likeDao.addLike(film.getId(), user.getId());
+        Collection<Film> foundFilms = likeDao.getPopularFilms(10);
 
         Set<Integer> likes = film.getLikes();
         likes.add(user.getId());
@@ -96,7 +96,7 @@ public class LikeDbStorageTest {
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void deleteLike() {
-        User user = likeDbStorage.getUserDbStorage().create(User.builder()
+        User user = likeDao.getUserDbStorage().create(User.builder()
                 .login("login")
                 .name("name")
                 .email("email@mail.ru")
@@ -107,7 +107,7 @@ public class LikeDbStorageTest {
         Set<Integer> likes = new TreeSet<>();
         likes.add(user.getId());
 
-        Film testFilm = likeDbStorage.getFilmDbStorage().create(Film.builder()
+        Film testFilm = likeDao.getFilmDbStorage().create(Film.builder()
                 .name("name")
                 .description("description")
                 .releaseDate(LocalDate.parse("1967-03-25"))
@@ -119,7 +119,7 @@ public class LikeDbStorageTest {
                 .genres(new ArrayList<>())
                 .build());
 
-        Film foundFilm = likeDbStorage.deleteLike(testFilm.getId(), user.getId());
+        Film foundFilm = likeDao.deleteLike(testFilm.getId(), user.getId());
 
         testFilm.setRate(1);
         likes.clear();

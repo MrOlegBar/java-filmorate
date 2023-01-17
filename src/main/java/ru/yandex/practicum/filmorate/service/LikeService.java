@@ -2,7 +2,7 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.storage.impl.dao.LikeDbStorage;
+import ru.yandex.practicum.filmorate.storage.dao.LikeDao;
 import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.exception.IncorrectParameterException;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
@@ -13,18 +13,18 @@ import java.util.Collection;
 @Service
 @AllArgsConstructor
 public class LikeService {
-    private final LikeDbStorage likeDbStorage;
+    private final LikeDao likeDao;
 
     public Collection<Film> getPopularFilms(Integer count) throws FilmNotFoundException {
-        return likeDbStorage.getPopularFilms(count);
+        return likeDao.getPopularFilms(count);
     }
     public Film addLike(int filmId, int userId) throws FilmNotFoundException, UserNotFoundException {
-        return likeDbStorage.addLike(filmId, userId);
+        return likeDao.addLike(filmId, userId);
     }
 
     public Film deleteLike(int filmId, int userId) throws UserNotFoundException, FilmNotFoundException
             , IncorrectParameterException {
-        return likeDbStorage.deleteLike(filmId, userId);
+        return likeDao.deleteLike(filmId, userId);
     }
 
 }

@@ -2,7 +2,7 @@ package ru.yandex.practicum.filmorate.storage.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.storage.UserStorage;
+import ru.yandex.practicum.filmorate.storage.dao.UserDao;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.user.User;
 
@@ -12,7 +12,7 @@ import java.util.TreeMap;
 
 @Component("inMemoryUserStorage")
 @Slf4j
-public class InMemoryUserStorage implements UserStorage {
+public class InMemoryUserDao implements UserDao {
     private final Map<String, User> users = new TreeMap<>();
     private static Integer globalId = 0;
 

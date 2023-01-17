@@ -13,8 +13,9 @@ import java.util.Collection;
 public class FriendController {
     private final FriendService friendService;
     @GetMapping(value = { "/users/{userId}/friends", "/users/{userId}/friends/common/{otherUserId}"})
-    public Collection<User> getFriends(@PathVariable(required = false) Integer userId
-            , @PathVariable(required = false) Integer otherUserId) throws UserNotFoundException {
+    public Collection<User> getFriends(@PathVariable(required = false) Integer userId,
+                                       @PathVariable(required = false) Integer otherUserId)
+            throws UserNotFoundException {
         if (otherUserId == null) {
             return friendService.getAllFriends(userId);
         } else {

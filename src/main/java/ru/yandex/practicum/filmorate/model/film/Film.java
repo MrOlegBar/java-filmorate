@@ -10,7 +10,6 @@ import java.util.*;
 @Data
 @Builder
 public class Film {
-    @Digits(integer = 2_147_483_647, fraction = 0)
     private int id;
     @NotBlank(message = "Название фильма отсутствует или представлено пустым символом.")
     private String name;
@@ -20,7 +19,6 @@ public class Film {
     @NotNull(message = "Дата выхода фильма отсутствует.")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate releaseDate;
-    @Digits(integer = 32_767, fraction = 0)
     @Positive(message = "Задано не допустимое значение продолжительности фильма.")
     private short duration;
     private RatingMpa mpa;
@@ -28,14 +26,14 @@ public class Film {
     private Set<Integer> likes;
     private List<Genre> genres;
 
-    public Map<String, Object> toMap(Film film) {
+    public Map<String, Object> toMap() {
         Map<String, Object> values = new HashMap<>();
-        values.put("title", film.getName());
-        values.put("description", film.getDescription());
-        values.put("release_date", film.getReleaseDate());
-        values.put("duration",  film.getDuration());
-        values.put("rating_MPA_id",  film.getMpa().getId());
-        values.put("rate",  (film.getRate() == null) ? 0 : film.getRate());
+        values.put("title", name);
+        values.put("description", description);
+        values.put("release_date", releaseDate);
+        values.put("duration",  duration);
+        values.put("rating_MPA_id",  mpa.getId());
+        values.put("rate",  (rate == null) ? 0 : rate);
         return values;
     }
 }
