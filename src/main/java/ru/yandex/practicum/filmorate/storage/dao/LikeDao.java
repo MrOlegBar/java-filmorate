@@ -30,7 +30,7 @@ public class LikeDao {
     }
 
     public Collection<Film> getPopularFilms(Integer count) {
-        String sqlQuery = "SELECT * FROM FILMS_RATINGS_MPA_VIEW ORDER BY RATE DESC LIMIT ?";
+        String sqlQuery = "SELECT * FROM films_ratings_mpa_view ORDER BY RATE DESC LIMIT ?";
         Collection<Film> films = jdbcTemplate.query(sqlQuery, (resultSet, rowNum) -> FilmMapper.mapRowToFilm(resultSet),
                 count);
 

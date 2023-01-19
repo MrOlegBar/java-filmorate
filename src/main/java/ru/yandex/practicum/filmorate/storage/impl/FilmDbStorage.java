@@ -45,7 +45,7 @@ public class FilmDbStorage implements FilmDao {
 
     @Override
     public Film getFilmById(int filmId) throws FilmNotFoundException {
-        String sqlQuery = "SELECT * FROM FILMS_RATINGS_MPA_VIEW WHERE FILM_ID = ?";
+        String sqlQuery = "SELECT * FROM films_ratings_mpa_view WHERE FILM_ID = ?";
         Film film;
 
         try {
@@ -66,7 +66,7 @@ public class FilmDbStorage implements FilmDao {
 
     @Override
     public Collection<Film> getAllFilms() {
-        String sqlQuery = "SELECT * FROM FILMS_RATINGS_MPA_VIEW";
+        String sqlQuery = "SELECT * FROM films_ratings_mpa_view";
         Collection<Film> films = jdbcTemplate.query(sqlQuery, (resultSet, rowNum)
                 -> FilmMapper.mapRowToFilm(resultSet));
 
@@ -111,7 +111,7 @@ public class FilmDbStorage implements FilmDao {
     }
 
     private void deleteGenresByFilmId(int filmId) {
-        String sqlQuery = "SELECT * FROM FILMS_GENRES_VIEW WHERE FILM_ID = ?";
+        String sqlQuery = "SELECT * FROM films_genres_view WHERE FILM_ID = ?";
         List<Genre> genres = new ArrayList<>(jdbcTemplate.query(sqlQuery, (resultSet, rowNum)
                 -> GenreMapper.mapRowToGenre(resultSet), filmId));
 
@@ -135,7 +135,7 @@ public class FilmDbStorage implements FilmDao {
     }
 
     public List<Genre> getGenres(int filmId) {
-        String sqlQueryForGenres = "SELECT * FROM FILMS_GENRES_VIEW WHERE FILM_ID = ?";
+        String sqlQueryForGenres = "SELECT * FROM films_genres_view WHERE FILM_ID = ?";
 
         List<Genre> genres = new ArrayList<>(jdbcTemplate.query(sqlQueryForGenres, (resultSet1, rowNum)
                 -> GenreMapper.mapRowToGenre(resultSet1), filmId));
