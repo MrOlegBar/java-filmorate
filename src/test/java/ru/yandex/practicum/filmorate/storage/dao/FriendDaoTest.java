@@ -132,7 +132,7 @@ class FriendDaoTest {
         friendDao.addFriend(testFriend.getId(), testCommonFriend.getId());
         friendDao.addFriend(testCommonFriend.getId(), testFriend.getId());
 
-        Collection<User> foundCommonFriends = friendDao.getCorporateFriends(testUser.getId(),testFriend.getId());
+        Collection<User> foundCommonFriends = friendDao.getCommonFriends(testUser.getId(),testFriend.getId());
 
         Map<Boolean, Set<Integer>> commonFriendFriends = testCommonFriend.getFriends();
         Set<Integer> trueCommonFriendFriends = commonFriendFriends.get(true);

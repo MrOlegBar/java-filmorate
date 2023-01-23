@@ -17,8 +17,8 @@ public class FriendService {
         return friendDao.getAllFriends(userId);
     }
 
-    public Collection<User> getCorporateFriends(int userId, int otherUserId) throws UserNotFoundException {
-        return friendDao.getCorporateFriends(userId, otherUserId);
+    public Collection<User> getCommonFriends(Integer userId, Integer otherUserId) throws UserNotFoundException {
+        return friendDao.getCommonFriends(userId, otherUserId);
     }
 
     public User addFriend(int userId, int friendId) throws UserNotFoundException {

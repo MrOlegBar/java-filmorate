@@ -30,7 +30,7 @@ public class LikeDao {
     }
 
     public Collection<Film> getPopularFilms(Integer count) {
-        String sqlQuery = "SELECT * FROM films_ratings_mpa_view ORDER BY RATE DESC LIMIT ?";
+        String sqlQuery = "SELECT * FROM films_ratings_mpa_view ORDER BY rate DESC LIMIT ?";
         Collection<Film> films = jdbcTemplate.query(sqlQuery, (resultSet, rowNum) -> FilmMapper.mapRowToFilm(resultSet),
                 count);
 
@@ -45,15 +45,16 @@ public class LikeDao {
         userDbStorage.getUserById(userId);
         filmDbStorage.getFilmById(filmId);
 
-        String sqlQuery = "INSERT INTO FILMS_LIKES VALUES (?, ?)";
+        String sqlQuery = "INSERT INTO films_likes VALUES (?, ?)";
         jdbcTemplate.update(sqlQuery, filmId, userId);
 
         String sqlQueryForAddLike = "UPDATE FILMS SET RATE = RATE + (SELECT COUNT(USER_ID) FROM FILMS_LIKES " +
                 "WHERE FILM_ID = ? AND USER_ID = ?) WHERE FILM_ID = ?";
         jdbcTemplate.update(sqlQueryForAddLike, filmId, userId, filmId);
 
-        log.info("Добавлен лайк от пользователя с userId = {} фильму с filmId = {}", userId, filmId);
-        return filmDbStorage.getFilmById(filmId);
+        Film filmWithLike = filmDbStorage.getFilmById(filmId);
+        log.info("Добавлен лайк от пользователя с userId = {} фильму: {}", userId, filmWithLike);
+        return filmWithLike;
     }
 
     public Film deleteLike(int filmId, int userId) throws UserNotFoundException, FilmNotFoundException,
@@ -71,11 +72,12 @@ public class LikeDao {
             jdbcTemplate.update(sqlQueryForDeleteLike, filmId, userId);
         } catch (EmptyResultDataAccessException e) {
             log.debug("Параметры filmId={}, userId={} некорректны.", filmId, userId);
-            throw new IncorrectParameterException(String.format("Параметры filmId=%s, userId=%s некорректны.", filmId
-                    , userId));
+            throw new IncorrectParameterException(String.format("Параметры filmId = %s, userId = %s некорректны."
+                    , filmId, userId));
         }
 
-        log.info("Удален лайк от пользователя с userId = {} фильму с filmId = {}", userId, filmId);
-        return filmDbStorage.getFilmById(filmId);
+        Film filmWithoutLike = filmDbStorage.getFilmById(filmId);
+        log.info("Удален лайк от пользователя с userId = {} фильму: {}", userId, filmWithoutLike);
+        return filmWithoutLike;
     }
 }

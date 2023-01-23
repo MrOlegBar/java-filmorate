@@ -107,7 +107,7 @@ public class FilmDbStorage implements FilmDao {
                     });
         }
 
-        log.info("Добавлены жанры у фильма с filmId = {}", film.getId());
+        log.info("Добавлены жанры фильму с filmId = {}", film.getId());
     }
 
     private void deleteGenresByFilmId(int filmId) {
@@ -124,7 +124,7 @@ public class FilmDbStorage implements FilmDao {
             jdbcTemplate.update(sqlQueryForDeleteGenres, filmId);
         }
 
-        log.info("Удалены жанры у фильма с filmId = {}", filmId);
+        log.info("Удалены жанры фильма с filmId = {}", filmId);
     }
 
     public Set<Integer> getLikes(int filmId) {

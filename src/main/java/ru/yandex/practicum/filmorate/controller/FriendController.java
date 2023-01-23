@@ -19,7 +19,7 @@ public class FriendController {
         if (otherUserId == null) {
             return friendService.getAllFriends(userId);
         } else {
-            return friendService.getCorporateFriends(userId, otherUserId);
+            return friendService.getCommonFriends(userId, otherUserId);
         }
     }
 
